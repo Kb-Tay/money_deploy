@@ -12,7 +12,6 @@ export function NewSpendingForm() {
 }
 
 function Form() {
-  const session = useSession()
   const [inputValue, setInputValue] = useState("")
 
 
