@@ -3,6 +3,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import Link from "next/link";
 import { NewSpendingForm } from "~/components/NewSpendingForm";
+import NavBar from "~/components/NavBar";
+import About from "./about";
+
 
 const Home: NextPage = () => {
   const session = useSession()
@@ -13,19 +16,13 @@ const Home: NextPage = () => {
     <div>
       <Link href='/'>Home</Link>
     </div>
-    {user == null ? (
-      <li>
-        <button onClick={() => void signIn()}>Log In</button> 
-      </li> 
-    ) : (
-      <li>
-        <button onClick={() => void signOut()}>Log Out</button>
-      </li>
-    )}
+    
     <NewSpendingForm />
+    <About />
     </>
   );
 };
 
-export default Home;
+export default Home; 
+
 
