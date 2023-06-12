@@ -13,9 +13,10 @@ datasource db {
 model Spending {
     id  String @id @default(uuid())
     userId String
-    money Float?
-    content String 
-    createdAt DateTime @default(now())
+    money Float
+    category String
+    content String
+    createdAt DateTime 
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     @@unique([createdAt, id])

@@ -11,6 +11,7 @@ import {
   FieldProps,
   FormikErrors,
   ErrorMessage,
+  useFormik,
 } from 'formik';
 
 
@@ -29,8 +30,8 @@ export function NewSpendingForm() {
 interface MyFormValues {
   Amount: number; 
   Category: string;
-  Date: Date; 
-  Content?: string;
+  Date: string; 
+  Content: string;
 }
 
 const validateForm = (values: MyFormValues) => {
@@ -52,10 +53,18 @@ const validateForm = (values: MyFormValues) => {
 }
 
 function SpendingForm() {
+
+  const createSpending = api.spending.create.useMutation({
+    onSuccess: (newSpending) => {
+      console.log(newSpending)
+    }
+  })
+
   const initialValues: MyFormValues = {
     Amount: 0,
     Category: '',
-    Date: new Date()
+    Date: '',
+    Content: ''
   }
 
   return( 
@@ -64,6 +73,14 @@ function SpendingForm() {
          initialValues={initialValues}
          validate={validateForm}
          onSubmit={(values, actions) => {
+
+          createSpending.mutate({
+            money: values.Amount,
+            category: values.Category, 
+            content: values.Content,
+            date: values.Date,
+          });
+
            console.log({ values, actions });
            alert(JSON.stringify(values, null, 2));
            actions.setSubmitting(false);
@@ -73,9 +90,11 @@ function SpendingForm() {
           <div className="flex flex-col mx-10 space-y-1 bg-slate-100 rounded">
 
               <h2 className="text-4xl font-extrabold">Creating New Spending</h2>
-              <label htmlFor="Amount">Amount Spent</label>
-              <Field id="Amount" name="Amount" placeholder="Input Amount" type="number" className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300"/>
-              <ErrorMessage name="Amount" component="div" className="text-red-600 font-bold"/> 
+                <label htmlFor="Amount">Amount Spent</label>
+                <Field id="Amount" name="Amount" placeholder="Input Amount" type="number" 
+                className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300"/>
+                <ErrorMessage name="Amount" component="div" className="text-red-600 font-bold"/> 
+                
                 <label htmlFor="Category">Select Category</label>
                 <Field as="select" id="Category" name="Category" placeholder="Chose Category" type="string"
                 className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300">
@@ -90,6 +109,9 @@ function SpendingForm() {
                 <label htmlFor="Date">Date</label>
                 <Field id="Date" name="Date" type="Date" className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300"/>
                 <ErrorMessage name="Date" component="div" className="text-red-600 font-bold"/> 
+
+                <label htmlFor="Content">Notes:</label>
+                <Field id="Content" name="Content" className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300"/>
 
                 <Button type="submit">Submit</Button>
           </div>

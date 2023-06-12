@@ -26,22 +26,35 @@ export default function NavBar() {
                   Home
                 </button>
               </Link>
+              { user == null ? (
               <Link href="/about">
                 <button className={`hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium 
                     ${active == 1 ? buttonStyle.focused : buttonStyle.unfocused}`}
                     onClick={() => setActive(1)}>
                     About
                 </button>
+              </Link>) : (
+              <Link href="/profile">
+              <button className={`hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium 
+                  ${active == 1 ? buttonStyle.focused : buttonStyle.unfocused}`}
+                  onClick={() => setActive(1)}>
+                  Profile
+              </button>
               </Link>
+              )}
             </div>
           </div>
 
           <div className="hidden sm:ml-6 sm:block justify-end">
             <div className="flex flex-row space-x-3 ">
               {user == null ? (
-                <button className='bg-gray-900 hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium' onClick={() => void signIn()}>Sign In</button> 
+                <Link href='/'>
+                  <button className='bg-gray-900 hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium' onClick={() => void signIn()}>Sign In</button> 
+                </Link>
               ) : (
-                <button className='bg-gray-900 hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium' onClick={() => void signOut()}>Sign Out</button> 
+                <Link href='/'>
+                  <button className='bg-gray-900 hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium' onClick={() => void signOut({callbackUrl : "/"})}>Sign Out</button> 
+                </Link>  
               )}
             </div>
           </div>
