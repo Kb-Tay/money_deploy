@@ -34,23 +34,23 @@ interface MyFormValues {
   Content: string;
 }
 
-const validateForm = (values: MyFormValues) => {
-  const errors: FormikErrors<MyFormValues> = {}; //indicate that the form fields are optional 
+  const validateForm = (values: MyFormValues) => {
+    const errors: FormikErrors<MyFormValues> = {}; //indicate that the form fields are optional 
 
-  if (!values.Amount) {
-    errors.Amount = 'Amount is Required'; 
-  } 
+    if (!values.Amount) {
+      errors.Amount = 'Amount is Required'; 
+    } 
 
-  if (!values.Category) {
-    errors.Category = 'Please Select a Category'; 
+    if (!values.Category) {
+      errors.Category = 'Please Select a Category'; 
+    }
+
+    if (!values.Date) {
+      errors.Date = 'Please input a Date'; 
+    }
+    
+    return errors;
   }
-
-  if (!values.Date) {
-    errors.Category = 'Please input a Date'; 
-  }
-  
-  return errors;
-}
 
 function SpendingForm() {
 
@@ -96,9 +96,9 @@ function SpendingForm() {
                 <ErrorMessage name="Amount" component="div" className="text-red-600 font-bold"/> 
                 
                 <label htmlFor="Category">Select Category</label>
-                <Field as="select" id="Category" name="Category" placeholder="Chose Category" type="string"
+                <Field as="select" id="Category" name="Category" type="string"
                 className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300">
-                <option value="">Select a Category</option>
+                <option value="" disabled>Select a Category</option>
                 <option value="Food & Drinks">Food & Drinks</option>
                 <option value="Shopping">Shopping</option>
                 <option value="Transporation">Transportation</option>

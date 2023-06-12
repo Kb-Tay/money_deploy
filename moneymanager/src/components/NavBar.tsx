@@ -49,7 +49,7 @@ export default function NavBar() {
             <div className="flex flex-row space-x-3 ">
               {user == null ? (
                 <Link href='/'>
-                  <button className='bg-gray-900 hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium' onClick={() => void signIn()}>Sign In</button> 
+                  <button className='bg-gray-900 hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium' onClick={() => void signIn("discord", {callbackUrl: "/"})}>Sign In</button> 
                 </Link>
               ) : (
                 <Link href='/'>

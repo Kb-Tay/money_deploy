@@ -17,6 +17,11 @@ const spendingProcedure = protectedProcedure.input(z.object({
   }))
 
 export const spendingsRouter = createTRPCRouter({
+
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.spending.findMany()
+  }),
+
   get: protectedProcedure // defining the field string using the name content
     .input(z.object({
       limit: z.number().optional(), 
@@ -31,12 +36,20 @@ export const spendingsRouter = createTRPCRouter({
       })
 
       let nextCursor : typeof cursor | undefined
+      let prevCursor : typeof cursor | undefined
+
+      if (data[0] != null) {
+        prevCursor = { id: data[0].id, createdAt: data[0].createdAt}
+      }
+
       if (data.length > limit) {
         const nextItem = data.pop()
         if (nextItem != null) {
           nextCursor = { id: nextItem.id, createdAt: nextItem.createdAt }
         }
       }
+      
+      
       
       return { spending: data.map( spend => {
         return {
@@ -47,8 +60,28 @@ export const spendingsRouter = createTRPCRouter({
           createdAt: spend.createdAt,
           userId: spend.userId
         }
-      }), nextCursor }
+      }), nextCursor, prevCursor }
   }),
+
+  getOne: protectedProcedure.input(z.object({ userid: z.string() })).query(
+    async ({ input: { userid },  ctx }) => {
+      return ctx.prisma.spending.findUnique({
+        where: {
+          id: userid
+        },
+      })
+    }), 
+
+  getUnique: protectedProcedure.input(z.object({ userid: z.string() })).query(
+    async ({ input: { userid }, ctx }) => {
+      return ctx.prisma.spending.findUnique({
+        where: {
+          id: userid
+        }
+      })
+    }
+
+  ),
 
   create: spendingProcedure // defining the field string using the name content
     .mutation(async ({ input: { money, category, date, content }, ctx }) => { //input refers to input that was validated by zodd
@@ -61,6 +94,32 @@ export const spendingsRouter = createTRPCRouter({
                 createdAt: date,
               }
       })
-    })
+    }),
+
+
+    edit: protectedProcedure.input( z.object({ 
+      userid: z.string(),
+      money: z.number().optional(), 
+      category: z.string().optional(), 
+      content: z.string().optional(), 
+      date: z.string().optional()})).mutation(
+      async({ input: { userid, money, category, content, date }, ctx }) => {
+        
+        const createdAt = date !== undefined ? new Date(date) : undefined
+        console.log(createdAt)
+
+        return await ctx.prisma.spending.update({
+          where: {
+            id: userid
+          },
+          data: {
+            money: money,
+            category: category, 
+            content: content,
+            createdAt: createdAt
+          }
+        })
+      }  
+    )
 
 }); 

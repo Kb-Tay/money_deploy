@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 import Link from "next/link";
 import { NewSpendingForm } from "~/components/NewSpendingForm";
 import NavBar from "~/components/NavBar";
-import About from "./about/page";
+import About from "./about";
 import { useRouter } from "next/router";
 
 
@@ -16,9 +16,11 @@ const Home: NextPage = () => {
   return (
     <>
     <div>
-      <Link href='/'>Home</Link>
-      <NewSpendingForm/>
+      { user == null ? 
+      <div>Home</div> : 
+      <NewSpendingForm/>}
     </div>
+    
     </>
   );
 };
