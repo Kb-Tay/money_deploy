@@ -1,9 +1,25 @@
 import { api } from "~/utils/api"
 import { InfiniteSpending } from "~/components/InfiniteSpending"
 import Target from "~/components/Target"
+import { useSession } from "next-auth/react"
+import { SpendingData } from "~/components/SpendingData"
 
-function Expense() {
-  const { data } = api.spending.getAll.useQuery() 
+export type Spending = { 
+  id: string, 
+  money: number, 
+  category: String, 
+  content: String, 
+  createdAt: Date, 
+  userId: String 
+}
+
+export type SpendingProps = {
+  spendings?: Spending[]
+}
+
+
+function Expense({spendings}: SpendingProps) {
+  // const { data } = api.spending.getAll.useQuery() 
   const currMonth = new Date().getMonth() //not sure if this refreshes when 
   const currYear = new Date().getFullYear()
 
@@ -13,7 +29,7 @@ function Expense() {
           <div className="flex justify-between">
             <div> 
               <span>Total: </span>
-              <span className="font-bold text-2xl">${data?.filter(post => (post.createdAt.getMonth() == currMonth 
+              <span className="font-bold text-2xl">${spendings?.filter(post => (post.createdAt.getMonth() == currMonth 
               && post.createdAt.getFullYear() == currYear)).reduce((sum: number, post) => sum + post.money, 0)}</span>
             </div>
             <div className='items-cent'>
@@ -25,9 +41,13 @@ function Expense() {
 }
 
 export default function Page() {
-  const { isLoading, isError, error, data, hasNextPage, fetchNextPage } = api.spending.get.useInfiniteQuery({}, 
-    { getNextPageParam: lastpage => lastpage.nextCursor })
+  const session = useSession()
+  const user = session.data?.user.id as string
 
+  const { isLoading, isError, error, data } = api.spending.getAll.useQuery(user)
+
+  // const { isLoading, isError, error, data, hasNextPage, fetchNextPage } = api.spending.get.useInfiniteQuery({userId: user}, 
+  //   { getNextPageParam: lastpage => lastpage.nextCursor })
 
   if (isLoading) {
     return <span>Loading...</span>
@@ -41,14 +61,15 @@ export default function Page() {
     <div className="px-20 py-4">
       <div className="grid sm:grid-cols-2 gap-4 pb-3">
         <Target/>
-        <Expense/> 
+        <Expense spendings={data.spending}/> 
       </div>
-      <InfiniteSpending spending={data?.pages.flatMap(page => page.spending)}
+        <SpendingData spendings={data.spending}/> 
+      {/* <InfiniteSpending spending={data?.pages.flatMap(page => page.spending)}
         isLoading={isLoading}
         isError={isError}
         hasMore={hasNextPage}
         fetchNewSpending={fetchNextPage}
-        /> 
+        />  */}
         
     </div>
   )

@@ -76,6 +76,8 @@ export function InfiniteSpending({ spending, isLoading, isError, hasMore,
                 More spending
             </button>        
           ) : (<button >Close</button>)}
+
+        
         </div>
       </div>
   )

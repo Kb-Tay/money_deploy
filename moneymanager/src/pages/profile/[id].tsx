@@ -13,10 +13,11 @@ import { GetStaticPaths, GetStaticPropsContext, InferGetServerSidePropsType, Nex
 import { GetStaticProps } from "next";
 import { ssgHelper } from "~/server/api/ssgHelper";
 import Link from "next/link";
+import PayeeForm from "~/components/PayeeForm";
 
 
 const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => { 
-  const { isLoading, data } = api.spending.getOne.useQuery({ userid: id })
+  const { isLoading, data } = api.spending.getUnique.useQuery({ userid: id })
 
   const updateSpending = api.spending.edit.useMutation({
     onSuccess: (editSpending) => { console.log(editSpending)}
@@ -58,11 +59,10 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
     return errors;
   }
 
-  console.log(data?.createdAt)
-
   const category = ["Food & Drinks", "Shopping", "Transporation", "Financial Expenses"]
 
   return (
+    <div>
     <Formik initialValues={initialValue} 
       validate={validateForm}
       onSubmit={(values, actions) => {
@@ -122,6 +122,8 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
       </Form>  
       }
     </Formik>
+    <PayeeForm spendingID={id}/>
+    </div>
   )
 }
 
@@ -160,52 +162,3 @@ export async function getStaticProps(
 
 
 export default SpendingPage;
-
-
-
-
-
-// interface FormValue {
-//   money?: number, 
-//   category?: string, 
-//   content?: string, 
-//   createdAt?: Date, 
-// }
-
-// export default function Page({ params }: { params: { id: string }}) {
-//   const router = useRouter() 
-//   const id = router.query.id //not sure how get params such that id is only type of string
-//   const initSpending = api.spending.getOne.useQuery( {userid: id}) 
-   
-//     const initialValue: FormValue = {
-//       money: initSpending.data?.money,
-//       category: initSpending.data?.category,
-//       content: initSpending.data?.content,
-//       createdAt: initSpending.data?.createdAt,
-//   }
-    
-//     return (
-//       <div className="px-4 py-4">
-//         <h2 className="flex justify-center text-2xl font-bold">Edit Spending</h2>
-//         <div>
-//           <Formik
-//             initialValues={initialValue}
-//             onSubmit={(values, actions) => {
-//               console.log({ values, actions });
-//               alert(JSON.stringify(values, null, 2));
-//               actions.setSubmitting(false);
-//             }}>
-//               { props => (
-//                 <form onSubmit={props.handleSubmit}>
-//                   <div>
-//                     <h2>Amount:</h2>
-//                     <input type="number" onChange={props.handleChange} className="border-2" name="money" value={props.values.money}/>
-//                   </div>
-//                 </form>
-//               )   
-//               }
-//           </Formik>
-//         </div>
-//       </div>
-//     )  
-//   }

@@ -10,15 +10,31 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Payment {
+    id String @id @default(uuid())
+    amount Float
+    resolved Boolean
+    userEmail String
+    spendingId String
+
+    spending Spending @relation(fields:[spendingId], references: [id], onDelete: Cascade)
+    user User @relation(fields:[userEmail], references: [email], onDelete: Cascade)
+
+    @@index([userEmail])
+    @@index([spendingId])
+}
+
 model Spending {
-    id  String @id @default(uuid())
-    userId String
+    id  String @id @default(uuid()) 
+    userId String 
     money Float
     category String
     content String
     createdAt DateTime 
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    payment Payment[]
+
     @@unique([createdAt, id])
     @@index([userId])
 }
@@ -63,6 +79,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     spendings     Spending[]
+    payments      Payment[]
 }
 
 model VerificationToken {

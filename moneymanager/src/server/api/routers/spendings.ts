@@ -18,29 +18,44 @@ const spendingProcedure = protectedProcedure.input(z.object({
 
 export const spendingsRouter = createTRPCRouter({
 
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.spending.findMany()
+  getAll: protectedProcedure.input(z.string()).query(async ({ input, ctx }) => {
+      const data = await ctx.prisma.spending.findMany({
+        where: {
+          userId: input
+        },
+        orderBy: [{ createdAt: "desc"}, {id: "desc"}],
+      })
+      
+      return { spending: data.map(spend => {
+        return {
+          id: spend.id,
+          money: spend.money, 
+          category: spend.category, 
+          content: spend.content,
+          createdAt: spend.createdAt,
+          userId: spend.userId
+        }
+      })} 
   }),
 
   get: protectedProcedure // defining the field string using the name content
     .input(z.object({
+      userId: z.string(),
       limit: z.number().optional(), 
       cursor: z.object({ id: z.string(), createdAt: z.date()}).optional(), // use post id as a cursor
     }))  
-    .query(async ({ input: {limit = 3, cursor}, ctx }) => { //input refers to input that was validated by zodd
+    .query(async ({ input: {userId, limit = 3, cursor}, ctx }) => { //input refers to input that was validated by zodd
 
       const data = await ctx.prisma.spending.findMany({
+        where: {
+          userId: userId
+        },
         take: limit + 1,
         cursor: cursor ? { createdAt_id: cursor } : undefined, 
         orderBy: [{ createdAt: "desc"}, {id: "desc"}],
       })
 
       let nextCursor : typeof cursor | undefined
-      let prevCursor : typeof cursor | undefined
-
-      if (data[0] != null) {
-        prevCursor = { id: data[0].id, createdAt: data[0].createdAt}
-      }
 
       if (data.length > limit) {
         const nextItem = data.pop()
@@ -48,8 +63,6 @@ export const spendingsRouter = createTRPCRouter({
           nextCursor = { id: nextItem.id, createdAt: nextItem.createdAt }
         }
       }
-      
-      
       
       return { spending: data.map( spend => {
         return {
@@ -60,17 +73,8 @@ export const spendingsRouter = createTRPCRouter({
           createdAt: spend.createdAt,
           userId: spend.userId
         }
-      }), nextCursor, prevCursor }
+      }), nextCursor }
   }),
-
-  getOne: protectedProcedure.input(z.object({ userid: z.string() })).query(
-    async ({ input: { userid },  ctx }) => {
-      return ctx.prisma.spending.findUnique({
-        where: {
-          id: userid
-        },
-      })
-    }), 
 
   getUnique: protectedProcedure.input(z.object({ userid: z.string() })).query(
     async ({ input: { userid }, ctx }) => {

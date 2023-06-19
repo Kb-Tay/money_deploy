@@ -80,9 +80,6 @@ function SpendingForm() {
             content: values.Content,
             date: values.Date,
           });
-
-           console.log({ values, actions });
-           alert(JSON.stringify(values, null, 2));
            actions.setSubmitting(false);
          }}
        >
