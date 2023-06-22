@@ -5,16 +5,9 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import Layout from "~/components/Layout";
 import { ChakraBaseProvider, extendBaseTheme } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
 // `@chakra-ui/theme` is a part of the base install with `@chakra-ui/react`
 import chakraTheme from '@chakra-ui/theme'
-
-const { Button, Select } = chakraTheme.components
-
-const theme = extendBaseTheme({
-  components: {
-    Select
-  },
-})
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -22,11 +15,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <ChakraBaseProvider theme={theme}>
+      <ChakraProvider>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </ChakraBaseProvider>     
+
+      </ChakraProvider>
     </SessionProvider>
   );
 };

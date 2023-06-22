@@ -1,15 +1,28 @@
 import Link from "next/link"
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function NavBar() {
   const session = useSession()
   const user = session.data?.user
   
-  //ref for different buttons 
-  const [active, setActive] = useState(0)
+  //gets state from localstorage on refresh, else default home 
+  const [active, setActive] = useState(() => {
+    const storedActive = typeof window !== 'undefined' ? localStorage.getItem('active') : null; 
+    if (storedActive == null) {
+      return 0 
+    } else {
+      return parseInt(storedActive)
+    }
+  })
+
+  //Update the local storage when state updates 
+  useEffect(() => {
+    localStorage.setItem('active', active.toString())
+  }, [active])
   
   // styling for being focused
+  
   const buttonStyle = { unfocused: "bg-gray-900",   focused: "bg-gray-500"}
 
   return(

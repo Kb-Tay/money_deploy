@@ -14,6 +14,7 @@ import { GetStaticProps } from "next";
 import { ssgHelper } from "~/server/api/ssgHelper";
 import Link from "next/link";
 import PayeeForm from "~/components/PayeeForm";
+import { useToast } from "@chakra-ui/react";
 
 
 const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => { 
@@ -33,6 +34,8 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
     createdAt: data?.createdAt.toLocaleDateString(),
     content: data?.content
   }
+
+  const toast = useToast()
 
   interface MyFormValues  {
     money: number | undefined,
@@ -74,8 +77,14 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
           content: values.content,
           date: values.createdAt
         })
-        console.log({ values, actions });
-        alert(JSON.stringify(values, null, 2));
+
+        toast({
+          title: 'Success',
+          description: 'New spending created',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+        })
         actions.setSubmitting(false);
       }}>
         {props => 
@@ -86,12 +95,12 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
             <div className="grid grid-cols-3 px-12 mb-2 space-x-2"> 
               <label htmlFor="money" className="flex font-medium text-xl items-center">Money:</label>  
               <Field type="number" name="money"
-                className="bg-gray-300 border-gray-300 rounded-lg block w-full col-span-2 h-8"/>
+                className="form-second col-span-2 h-8"/>
             </div>
             <div className="grid grid-cols-3 grid-flow-col px-12 mb-2 space-x-2"> 
               <label htmlFor="category" className="flex font-medium text-xl items-center">Category:</label>  
               <Field as="select" type="string" name="category"
-                className="bg-gray-300 border-gray-300 rounded-lg block w-full col-span-2 h-8">
+                className="form-second block w-full col-span-2 h-8">
                   <option value={props.values.category}>{props.values.category}</option>
                   {category.filter(cat => cat !== data?.category).map(cat => <option key={cat} value={cat}>{cat}</option>)}
               </Field>  
@@ -103,12 +112,12 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
               </div>
               
               <Field type="date" name="createdAt"
-                className="bg-gray-300 border-gray-300 rounded-lg h-8"/>
+                className="form-second col-span-2 h-8"/>
             </div>
             <div className="grid grid-cols-3 px-12 mb-2 space-x-2"> 
               <label htmlFor="content" className="flex font-medium text-xl items-center">Content:</label>  
               <Field type="string" name="content"
-                className="bg-gray-300 border-gray-300 rounded-lg block w-full col-span-2 h-8"/>
+                className="form-second block col-span-2 h-8"/>
             </div>
             <div className="flex justify-center items'center pb-2 space-x-3">
                 <button className="rounded bg-gray-700 px-2 pxy-2 text-white font-medium hover:bg-gray-600" type="submit">Submit</button>

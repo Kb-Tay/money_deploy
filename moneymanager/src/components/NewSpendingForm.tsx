@@ -13,6 +13,7 @@ import {
   ErrorMessage,
   useFormik,
 } from 'formik';
+import { useTabList, useToast } from "@chakra-ui/react";
 
 
 export function NewSpendingForm() {
@@ -53,12 +54,18 @@ interface MyFormValues {
   }
 
 function SpendingForm() {
+  const utils = api.useContext(); 
+  const invalidQuery = () => {
+    utils.spending.invalidate()
+  } //invalidating takes some time 
 
   const createSpending = api.spending.create.useMutation({
     onSuccess: (newSpending) => {
-      console.log(newSpending)
+      invalidQuery()
     }
   })
+
+  const toast = useToast()
 
   const initialValues: MyFormValues = {
     Amount: 0,
@@ -80,92 +87,78 @@ function SpendingForm() {
             content: values.Content,
             date: values.Date,
           });
-           actions.setSubmitting(false);
+          toast({
+            title: 'Success',
+            description: 'New spending created',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          })
+          actions.resetForm()
+          actions.setSubmitting(false);
          }}
        >
-         <Form className="w-full mb-6">
-          <div className="flex flex-col mx-10 space-y-1 bg-slate-100 rounded">
+         <Form className="md:px-20 pt-4">
+          <div className="flex flex-col justify-center md:mx-10 py-3 space-y-2 bg-slate-500 rounded-lg">
 
-              <h2 className="text-4xl font-extrabold">Creating New Spending</h2>
-                <label htmlFor="Amount">Amount Spent</label>
-                <Field id="Amount" name="Amount" placeholder="Input Amount" type="number" 
-                className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300"/>
-                <ErrorMessage name="Amount" component="div" className="text-red-600 font-bold"/> 
+              <h2 className="flex justify-center text-4xl font-extrabold">Add a Expense</h2>
+
+                <div className="flex justify-center space-x-4 py-3">
+                  <label className="font-medium text-2xl" htmlFor="Amount">Amount Spent:</label>
+                  <div className="flex flex-row bg-slate-700 bg-opacity-50 py-2 px-1 ">
+                    <div className="justify-start block items-center rounded-lg bg-slate-700 text-white text-medium px-2">SGD</div>
+                    <Field id="Amount" name="Amount" type="number" 
+                    className="appearance-none focus:outline-none bg-transparent font-medium text-xl text-center"/>
+                  </div>
+                </div>
+                <ErrorMessage name="Amount" component="div" className="error"/>
+
+
+                <div className="justify-center">
+                  <div className="grid grid-cols-4">  
+                    <div></div>
+                    <label className="flex justify-center font-medium"htmlFor="Category">Category:</label>
+                    <Field as="select" id="Category" name="Category" type="string"
+                    className="form-primary w-2/3">
+                    <option value="" disabled>Select a Category</option>
+                    <option value="Food & Drinks">Food & Drinks</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Transporation">Transportation</option>
+                    <option value="Financial Expenses">Financial Expenses</option>
+                  </Field> 
+
+                  </div>
+                  
+                </div>                
+                <ErrorMessage name="Category" component="div" className="error"/> 
+
+                <div className="justify-center">
+                  <div className="grid grid-cols-4">
+                    <div>
+                    </div>
+                    <label className="flex justify-center font-medium pr-8" htmlFor="Date">Date:</label>
+                    <Field id="Date" name="Date" type="Date" className="form-primary w-2/3"/>
+                  </div>
+                </div>
                 
-                <label htmlFor="Category">Select Category</label>
-                <Field as="select" id="Category" name="Category" type="string"
-                className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300">
-                <option value="" disabled>Select a Category</option>
-                <option value="Food & Drinks">Food & Drinks</option>
-                <option value="Shopping">Shopping</option>
-                <option value="Transporation">Transportation</option>
-                <option value="Financial Expenses">Financial Expenses</option>
-                </Field> 
-                <ErrorMessage name="Category" component="div" className="text-red-600 font-bold"/> 
+                <ErrorMessage name="Date" component="div" className="error"/> 
 
-                <label htmlFor="Date">Date</label>
-                <Field id="Date" name="Date" type="Date" className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300"/>
-                <ErrorMessage name="Date" component="div" className="text-red-600 font-bold"/> 
-
-                <label htmlFor="Content">Notes:</label>
-                <Field id="Content" name="Content" className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300"/>
-
-                <Button type="submit">Submit</Button>
-          </div>
+                <div className="justify-center">
+                  <div className="grid grid-cols-4">
+                  <div></div>
+                  <label className="flex justify-center font-medium pr-6" htmlFor="Content">Notes:</label>
+                  <div>
+                    <Field id="Content" name="Content" className="form-primary w-2/3"/>
+                  </div>
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <button className="w-1/2 btn-primary" type="submit">Submit</button>
+                </div>
+              </div>
+                
          </Form>
        </Formik>
     </>
   )
 }
-
-
-
-// function SpendingForm() {
-//   return(
-//     <form className="w-full max-w-sm">
-//       <div className="md:flex md:items-center mb-6">
-//         <div className="md:w-1/2">
-//           <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4">
-//             Amount Spent: 
-//           </label>
-//         </div>
-//         <div className="md:w-1/2">
-//           <input className="bg-gray-200 border-2 border-gray-200 rounded w-full px-2 focus:outline-none focus:bg-white focus:border-purple-300" type="text"/>
-
-//         </div>
-//       </div>
-//     </form>
-//   )
-// }
-
-// function Form() {
-//   const [inputValue, setInputValue] = useState("")
-
-
-//   const createSpending = api.spending.create.useMutation({
-//     onSuccess: (newSpending) => {
-//       console.log(newSpending)
-//       setInputValue("")
-//     }
-//   })
-
-//   function handleSubmit(e : FormEvent) {
-//     e.preventDefault(); 
-
-//     createSpending.mutate({content: inputValue})
-//   }
-
-//   return(
-//     <form 
-//       onSubmit={handleSubmit}
-//       className="flex flex-col gap-2 borber-b px-4 py-2"
-//     >
-//       <div className="flex gap-4">
-//         <input className="flex-grow resize-none p-4 text-lg border-black"
-//         placeholder="New Spending" value={inputValue} onChange={(e) => setInputValue(e.target.value)}/>
-//       </div>
-//       <Button className="self-center">Make New Spending</Button>
-//     </form>
-//   )
-// }
-

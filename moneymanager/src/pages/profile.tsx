@@ -3,6 +3,7 @@ import { InfiniteSpending } from "~/components/InfiniteSpending"
 import Target from "~/components/Target"
 import { useSession } from "next-auth/react"
 import { SpendingData } from "~/components/SpendingData"
+import ProfileImg from "~/components/ProfileImg"
 
 export type Spending = { 
   id: string, 
@@ -43,8 +44,9 @@ function Expense({spendings}: SpendingProps) {
 export default function Page() {
   const session = useSession()
   const user = session.data?.user.id as string
-
   const { isLoading, isError, error, data } = api.spending.getAll.useQuery(user)
+
+  if (session.status !== 'authenticated') return (<div>Not authenticated</div>); 
 
   // const { isLoading, isError, error, data, hasNextPage, fetchNextPage } = api.spending.get.useInfiniteQuery({userId: user}, 
   //   { getNextPageParam: lastpage => lastpage.nextCursor })
@@ -60,7 +62,7 @@ export default function Page() {
   return (
     <div className="px-20 py-4">
       <div className="grid sm:grid-cols-2 gap-4 pb-3">
-        <Target/>
+        <Target src={session.data.user.image} name={session.data.user.name}/>
         <Expense spendings={data.spending}/> 
       </div>
         <SpendingData spendings={data.spending}/> 
