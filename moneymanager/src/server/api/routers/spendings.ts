@@ -78,7 +78,7 @@ export const spendingsRouter = createTRPCRouter({
 
   getUnique: protectedProcedure.input(z.object({ userid: z.string() })).query(
     async ({ input: { userid }, ctx }) => {
-      return ctx.prisma.spending.findUnique({
+      return await ctx.prisma.spending.findUnique({
         where: {
           id: userid
         }

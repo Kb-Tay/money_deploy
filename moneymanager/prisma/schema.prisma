@@ -92,6 +92,7 @@ model Follows {
   followingId String
 
   @@id([followerId, followingId])
+  @@unique([followerId, followingId])
   @@index([followerId])
   @@index([followingId])
 }
