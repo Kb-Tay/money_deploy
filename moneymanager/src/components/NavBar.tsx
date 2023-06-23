@@ -7,19 +7,18 @@ export default function NavBar() {
   const user = session.data?.user
   
   //gets state from localstorage on refresh, else default home 
-  const [active, setActive] = useState(() => {
-    const storedActive = typeof window !== 'undefined' ? localStorage.getItem('active') : null; 
-    if (storedActive == null) {
-      return 0 
-    } else {
-      return parseInt(storedActive)
-    }
-  })
+  const [active, setActive] = useState(0)
+    // const storedActive = typeof window !== 'undefined' ? localStorage.getItem('active') : null; 
+    // if (storedActive == null) {
+    //   return 0 
+    // } else {
+    //   return parseInt(storedActive)
+    // }
 
   //Update the local storage when state updates 
-  useEffect(() => {
-    localStorage.setItem('active', active.toString())
-  }, [active])
+  // useEffect(() => {
+  //   localStorage.setItem('active', active.toString())
+  // }, [active])
   
   // styling for being focused
   

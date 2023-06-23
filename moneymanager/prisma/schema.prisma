@@ -90,6 +90,11 @@ model Follows {
   followerId  String
   following   User @relation("following", fields: [followingId], references: [id])
   followingId String
+  followerName String?
+  followerImg String?
+  followingName String? 
+  followingImg String?
+  isFriend Boolean @default(false)
 
   @@id([followerId, followingId])
   @@unique([followerId, followingId])

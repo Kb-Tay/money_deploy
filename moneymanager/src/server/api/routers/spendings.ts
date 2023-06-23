@@ -110,7 +110,6 @@ export const spendingsRouter = createTRPCRouter({
       async({ input: { userid, money, category, content, date }, ctx }) => {
         
         const createdAt = date !== undefined ? new Date(date) : undefined
-        console.log(createdAt)
 
         return await ctx.prisma.spending.update({
           where: {

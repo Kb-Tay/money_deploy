@@ -19,6 +19,7 @@ import { useToast } from "@chakra-ui/react";
 
 const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => { 
   const { isLoading, data } = api.spending.getUnique.useQuery({ userid: id })
+  const toast = useToast()
 
   const updateSpending = api.spending.edit.useMutation({
     onSuccess: (editSpending) => { console.log(editSpending)}
@@ -34,8 +35,6 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
     createdAt: data?.createdAt.toLocaleDateString(),
     content: data?.content
   }
-
-  const toast = useToast()
 
   interface MyFormValues  {
     money: number | undefined,
