@@ -3,7 +3,11 @@ import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
-import NavBar from "~/components/NavBar";
+import Layout from "~/components/Layout";
+import { ChakraBaseProvider, extendBaseTheme } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react'
+// `@chakra-ui/theme` is a part of the base install with `@chakra-ui/react`
+import chakraTheme from '@chakra-ui/theme'
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -11,8 +15,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <NavBar/>
-      <Component {...pageProps} />
+      <ChakraProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+
+      </ChakraProvider>
     </SessionProvider>
   );
 };

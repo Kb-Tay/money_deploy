@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer components {
+  .btn-primary {
+    @apply rounded bg-gray-700 px-2 py-1 text-white font-medium hover:bg-gray-600;
+  }
+
+  .error {
+    @apply flex justify-center text-red-600;
+  }
+
+  .form-primary {
+    @apply bg-gray-200 border-2 border-gray-200 rounded px-2 focus:outline-none focus:border-cyan-500;
+  }
+  
+  .form-second {
+    @apply bg-gray-200 border-2 border-gray-200 rounded focus:outline-none focus:border-cyan-500;
+  }
+
+}

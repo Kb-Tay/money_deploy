@@ -1,12 +1,10 @@
-import { type NextPage } from "next";
+import Link from "next/link"
 
-const About: NextPage = () => {
 
-  return(
+export default function Page() {
+  return (
     <>
-    <div>About Page</div>
+      <div>About</div>
     </>
   )
 }
-
-export default About;
