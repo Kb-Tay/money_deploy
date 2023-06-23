@@ -36,27 +36,76 @@ export const usersRouter = createTRPCRouter({
     
   }),
 
-  getFriends: protectedProcedure.input(z.string()).query(async ({ input, ctx }) => {
+  getFollowers: protectedProcedure.input(z.string()).query(async ({ input, ctx }) => {
     const data = await ctx.prisma.follows.findMany({
       where: {
         followerId: input
       }
     }) 
-    
+
     return data.map(post => {
-      return { followerId: post.followerId }
+      return {
+        followerId: post.followerId,
+        followingId: post.followingId,
+        followerName: post.followerName,
+        followerImg: post.followerImg,
+        followingName: post.followingName,
+        followingImg: post.followingImg,
+        isFriend: post.isFriend
+      }})
+    
+  }),
+
+  getFollowing: protectedProcedure.input(z.string()).query(async ({ input, ctx}) => {
+    const data = await ctx.prisma.follows.findMany({
+      where: {
+        followingId: input
+      }
+    })
+
+    return data.map(post => {
+      return {
+        followerId: post.followerId,
+        followingId: post.followingId,
+        followerName: post.followerName,
+        followerImg: post.followerImg,
+        followingName: post.followingName,
+        followingImg: post.followingImg,
+        isFriend: post.isFriend
+      }})
+  }),
+
+  addFriend: protectedProcedure.input(z.object({ followerId: z.string(), followingId: z.string(), isFriend: z.boolean()})).mutation(async ({ input: {followerId, followingId, isFriend}, ctx}) => {
+    return await ctx.prisma.follows.update({
+      where: {
+        followerId_followingId: {
+          followerId: followerId,
+          followingId: followingId,
+        }
+      }, 
+      data: {
+        isFriend: isFriend
+      }
     })
   }),
 
   createFriend: protectedProcedure.input(z.object({
     followerId: z.string(), 
-    followingId: z.string() 
-  })).mutation(async ({ input: {followerId, followingId}, ctx }) => {
+    followingId: z.string(), 
+    followerName: z.string().optional(),
+    followingName: z.string().optional(), 
+    followerImg: z.string().optional(), 
+    followingImg: z.string().optional(),
+  })).mutation(async ({ input: {followerId, followingId, followerName, followingName, followerImg, followingImg }, ctx }) => {
     
     return await ctx.prisma.follows.create({
       data: {
         followerId: followerId, 
-        followingId: followingId
+        followingId: followingId,
+        followerName: followerName,
+        followingName: followingName, 
+        followerImg: followerImg,
+        followingImg:  followingImg,
       },
     })
   }), 
