@@ -130,7 +130,7 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
       </Form>  
       }
     </Formik>
-    <PayeeForm spendingID={id}/>
+    <PayeeForm spendingID={id} content={data?.content} />
     </div>
   )
 }
