@@ -25,6 +25,8 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
     onSuccess: (editSpending) => { console.log(editSpending)}
   })
 
+  const spendingTotal = data?.money ?? 0 
+
   if (isLoading) {
     return <div> Loading... </div>
   }
@@ -130,7 +132,7 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
       </Form>  
       }
     </Formik>
-    <PayeeForm spendingID={id}/>
+    <PayeeForm spendingID={id} content={data?.content} spendingTotal={spendingTotal}/>
     </div>
   )
 }

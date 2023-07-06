@@ -9,6 +9,16 @@ import {
 
 export const usersRouter = createTRPCRouter({
 
+  getUserName: protectedProcedure.input(z.string()).query(async ({ input, ctx }) => {
+    const data = await ctx.prisma.user.findUnique({
+      where: {
+        id: input
+      }
+    })
+
+    return data?.name
+  }),
+
   getAll: protectedProcedure.query(async ({ ctx }) => {
     const data = await ctx.prisma.user.findMany() 
 

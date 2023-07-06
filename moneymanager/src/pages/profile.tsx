@@ -4,41 +4,28 @@ import Target from "~/components/Target"
 import { useSession } from "next-auth/react"
 import { SpendingData } from "~/components/SpendingData"
 import ProfileImg from "~/components/ProfileImg"
+import Expense from "~/components/Expense"
+
 
 export type Spending = { 
   id: string, 
   money: number, 
-  category: String, 
-  content: String, 
+  category: string, 
+  content: string, 
   createdAt: Date, 
-  userId: String 
+  userId: string,
 }
 
 export type SpendingProps = {
   spendings?: Spending[]
+  userId: string
 }
 
-
-function Expense({spendings}: SpendingProps) {
-  // const { data } = api.spending.getAll.useQuery() 
-  const currMonth = new Date().getMonth() //not sure if this refreshes when 
-  const currYear = new Date().getFullYear()
-
-  return(
-    <div className="bg-slate-500 px-4 py-2 rounded-lg">
-          <p className="border-solid border-slate-600 border-b-2">Expenses Monthly:</p>
-          <div className="flex justify-between">
-            <div> 
-              <span>Total: </span>
-              <span className="font-bold text-2xl">${spendings?.filter(post => (post.createdAt.getMonth() == currMonth 
-              && post.createdAt.getFullYear() == currYear)).reduce((sum: number, post) => sum + post.money, 0)}</span>
-            </div>
-            <div className='items-cent'>
-              <span>{currMonth + 1}/{currYear}</span>
-            </div>
-          </div>
-    </div>
-  )
+export type TargetProps = {
+  src?: string | null
+  name?: string | null
+  spendings?: Spending[]
+  userId: string 
 }
 
 export default function Page() {
@@ -61,11 +48,11 @@ export default function Page() {
 
   return (
     <div className="px-20 py-4">
-      <div className="grid sm:grid-cols-2 gap-4 pb-3">
-        <Target src={session.data.user.image} name={session.data.user.name}/>
-        <Expense spendings={data.spending}/> 
+      <div className="grid lg:grid-cols-2 gap-4 pb-3">
+        <Target src={session.data.user.image} name={session.data.user.name} spendings={data.spending} userId={user}/>
+        <Expense spendings={data.spending} userId={user}/> 
       </div>
-        <SpendingData spendings={data.spending}/> 
+        <SpendingData spendings={data.spending} userId={user}/> 
       {/* <InfiniteSpending spending={data?.pages.flatMap(page => page.spending)}
         isLoading={isLoading}
         isError={isError}

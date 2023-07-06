@@ -13,14 +13,17 @@ datasource db {
 model Payment {
     id String @id @default(uuid())
     amount Float
-    resolved Boolean
-    userEmail String
+    resolved Boolean @default(false)
+    validated Boolean @default(false)
+    userId String //the one being owed
+    payeeId String 
     spendingId String
+    note String? 
 
     spending Spending @relation(fields:[spendingId], references: [id], onDelete: Cascade)
-    user User @relation(fields:[userEmail], references: [email], onDelete: Cascade)
+    user User @relation(fields:[userId], references: [id], onDelete: Cascade)
 
-    @@index([userEmail])
+    @@index([userId])
     @@index([spendingId])
 }
 
