@@ -47,7 +47,7 @@ export function SpendingData({spendings}: SpendingProps) {
       <div className='py-2'>
         {data !== null ? data?.map(post => 
 
-        <div key={post.id} className='grid grid-cols-4 pb-2'>
+        <div key={post.id} className='grid grid-cols-5 pb-2'>
           <div className="px-4">
             { post.category == "Food & Drinks" 
               ? <IoFastFoodOutline className='w-10 h-10'/>
@@ -60,16 +60,21 @@ export function SpendingData({spendings}: SpendingProps) {
           </div>
 
           <div>
-            <p>Amount:</p>
-              <p className='text-slate-800 font-bold'>${post.money}</p>
+              <p className='text-slate-800 font-bold'>Amount:</p>
+              <p >${post.money}</p>
           </div>
 
           <div> 
-            <p>Date:</p>
+            <p className='text-slate-800 font-bold'>Date:</p>
             <p>{post.createdAt.toLocaleDateString()}</p>
           </div>
 
-          <div className="flex flex-row item-center justify-start space-x-8">
+          <div>
+            <p className='text-slate-800 font-bold'>Note:</p>
+            <p>{post.content == "" ? "No record" : post.content}</p>
+          </div>
+
+          <div className="flex flex-row items-center justify-start space-x-8">
             <Link href={`/profile/${post.id}`}> 
               <RxPencil2 className="hover:text-white hover:cursor-pointer w-8 h-8"/> 
             </Link>

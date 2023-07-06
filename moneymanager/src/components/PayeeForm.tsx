@@ -1,33 +1,40 @@
 import React, { useEffect, useState } from "react";
 import {
   Formik,
-  FormikHelpers,
-  FormikProps,
   Form,
   Field,
   FormikErrors,
-  FieldProps,
+  ErrorMessage,
 } from 'formik';
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Email from "next-auth/providers/email";
 import Payee from "./Payee";
+import { TiTickOutline } from "react-icons/ti"
+import { BiErrorCircle } from "react-icons/bi"
 
-type props = {
+type PayeeFormProps = {
   spendingID: string,
-  content?: string,}
+  spendingTotal: number 
+  content?: string,
+}
 
-function NewForm({spendingID, content}: props) {
+type AddPayeeProps = { 
+  spendingID: string,
+  spendingTotal: number 
+  content?: string,
+  totalAssigned: number,
+}
+
+function NewForm({spendingID, spendingTotal, content, totalAssigned}: AddPayeeProps) {
   const session = useSession()
   const userId = session.data?.user.id as string
   const userName = session.data?.user.name as string
   const utils = api.useContext()
 
   const following = api.user.getFollowing.useQuery(userId).data
-  const { data } = api.user.getFollowers.useQuery(userId)
-  const followers = data == undefined ? [] : data
-  const friends = following?.concat(followers)
+  const followers = api.user.getFollowers.useQuery(userId).data
   
   const createPayment = api.payment.create.useMutation({
     onSuccess: (input) => {
@@ -35,11 +42,8 @@ function NewForm({spendingID, content}: props) {
       }
   })
 
-  const PayeeList = friends == undefined ? [] : friends.filter(post => post.isFriend)
-
   interface MyFormValues {
     amount: number,
-    resolved: boolean,
     userId: string,
     payeeId: string, 
     spendingId: string,
@@ -48,7 +52,6 @@ function NewForm({spendingID, content}: props) {
 
   const initialValues: MyFormValues = {
     amount: 0,
-    resolved: false,
     userId: userId,
     payeeId: '',
     spendingId: spendingID, 
@@ -64,7 +67,13 @@ function NewForm({spendingID, content}: props) {
 
     if (!values.amount) {
       errors.amount = "Must include Amount"
+    } 
+    
+    if (values.amount + totalAssigned > spendingTotal) {
+      errors.amount = 'Cannot assign payment greater than spending'
     }
+
+    return errors
   }
 
   return (
@@ -77,13 +86,9 @@ function NewForm({spendingID, content}: props) {
               userId: values.userId,
               payeeId: values.payeeId,
               amount: values.amount,
-              resolved: values.resolved,
               spendingID: values.spendingId,
               note: values.note
-            })
-
-            console.log(values)
-            
+            })            
             actions.setSubmitting(false)
             actions.resetForm()
          }}
@@ -95,14 +100,17 @@ function NewForm({spendingID, content}: props) {
                 <label htmlFor="payeeId">Add Payee:</label>
                 <Field as="select" id="payeeId" name="payeeId" type="string" className="form-primary">
                 <option value="" disabled>Select Friend</option>
-                  {PayeeList.map((post, index) => (
+                  {followers?.map((post, index) => (
                       <option key={index} value={`${post.followingId}`}>{post.followingName}</option>
+                    ))}
+                  {following?.map((post, index) => (
+                      <option key={index} value={`${post.followerId}`}>{post.followerName}</option>
                     ))}
                 </Field>
               </div>
               <div className="space-x-2">
                 <label htmlFor="amount">Add Amount:</label>
-                <Field type="number" id="amount" name="amount" placeholder="Enter Amount" className="form-primary"/>
+                <Field type="number" id="amount"  name="amount" placeholder="Enter Amount" className="form-primary"/>
               </div>
               <div className="space-x-2">
                 <label htmlFor="note">Payment Note:</label>
@@ -112,23 +120,52 @@ function NewForm({spendingID, content}: props) {
             <div className="md:pt-0 pt-2 pl-8">
               <button type="submit" className="btn-primary px-10">Add Payee</button>
             </div>
+
+
           </div>
+          <div className="flex justify-center"> 
+            <ErrorMessage name="payeeId">{msg => 
+              <div className="flex flex-cols space-x-1 items-center">
+                <BiErrorCircle className="h-5 w-5 text-amber-500"/>
+                <p className="font-bold text-slate-700">{msg}</p>
+              </div>
+              }</ErrorMessage>
+          </div>
+          <div className="flex justify-center"> 
+            <ErrorMessage name="amount">{msg => 
+              <div className="flex flex-cols space-x-1 items-center">
+                <BiErrorCircle className="h-5 w-5 text-amber-500"/>
+                <p className="font-bold text-slate-700">{msg}</p>
+              </div>
+              }</ErrorMessage>
+          </div>
+
          </Form>
        </Formik>
-       
      </div>
 
   )
 }
 
 
-export default function PayeeForm({spendingID, content}: props) {
+export default function PayeeForm({spendingID, content, spendingTotal}: PayeeFormProps) {
   const [close, setClose] = useState(false)
   const session = useSession()
   const userId = session.data?.user.id as string
+  const utils = api.useContext()
 
-  const { isLoading, data } = api.payment.getPayments.useQuery(userId)
-  console.log(data)
+  const { isLoading, data } = api.payment.getPayee.useQuery(spendingID)
+  const validatePayment = api.payment.validate.useMutation({
+    onSuccess: (editSpending) => { 
+      utils.payment.invalidate() // find out how to invalidate 
+    }
+  })
+  
+  const handleValidate = (id: string) => {
+    validatePayment.mutate(id)
+  }
+
+  const totalAssigned = data?.reduce((acc, post) => post.amount + acc, 0) ?? 0
 
   return (
     <div className="sm:px-10 py-4">
@@ -138,36 +175,40 @@ export default function PayeeForm({spendingID, content}: props) {
         </div>
         <div className="pb-2">
         {
-              data?.collect == undefined || data?.collect.length == 0 ? <></> :
+              data == undefined || data?.length == 0 ? <></> :
               <div className="border-b-slate-600 border-b-2 mx-10">
                   <div className="mb-2">
                   {
-                  data?.collect.map((post, ind) => 
-                    <ul key={ind} className="flex flex-cols justify-center space-x-10">
+                  data?.map((post, ind) => 
+                    <div key={ind} className="md:grid md:grid-cols-5 px-5 md:pb-0 pb-4">
                       <div className="flex flex-cols space-x-1">
                         <p className="font-bold">Payee Name:</p> 
                         <Payee userId={post.payeeId}/>
                       </div>
-                      <div className="flex flex-cols space-x-1">
+                      <div className="flex flex-cols space-x-1 md:px-4">
                         <p className="font-bold">Amount:</p>
                         <p key={ind}>${post.amount}</p>
                       </div>
-                      <div className="flex flex-cols space-x-1">
+                      <div className="flex flex-cols space-x-1 md:px-4">
                         <p className="font-bold">Note:</p>
                         <p key={ind}>{post.note}</p>
                       </div>
-                      <div className="flex flex-cols space-x-1"> 
+                      <div className="flex flex-cols space-x-1 md:pl-5"> 
                         <p className="font-bold">Status:</p>
-                        {post.resolved ? <p>Resolved</p> : <p>Pending Payment</p>}
+                        { post.validated ? <p>Validated</p> : post.resolved ? <p>Resolved</p> : <p>Pending Payment</p>}
                       </div>
-                    </ul>
+                      <div className="flex flex-cols space-x-1 md:pl-5"> 
+                        { post.validated ? <TiTickOutline className="h-7 w-7 text-slate-800"/>
+                        : <button className="hover:text-white font-bold" onClick={() => handleValidate(post.id)}>Confirm Paid</button>}
+                      </div>
+                    </div>
                   )
                   }
                   </div> 
                 </div>
             }
         </div> 
-          {close ? <NewForm spendingID={spendingID} content={content}/> : <></>}
+          {close ? <NewForm spendingID={spendingID} spendingTotal={spendingTotal} content={content} totalAssigned={totalAssigned}/> : <></>}
           <div className="flex justify-center space-x-2 pt-1">
             {
               close ? 

@@ -1,3 +1,4 @@
+import { CiText } from "react-icons/ci";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -7,8 +8,6 @@ import {
 
 
 export const paymentRouter = createTRPCRouter({
-
-
 
   getPayments: protectedProcedure.input(z.string()).query(async ({ input, ctx }) => {
     const data1 = await ctx.prisma.payment.findMany({
@@ -25,44 +24,84 @@ export const paymentRouter = createTRPCRouter({
 
     return {
       owe: data2.map(post => ({
+        id: post.id,
         amount: post.amount,
         resolved: post.resolved, 
         userId: post.userId, 
         payeeId: post.payeeId,
-        note: post.note
+        note: post.note,
+        validated: post.validated
       })),
 
       collect: data1.map(post => ({
+        id: post.id,
         amount: post.amount,
         resolved: post.resolved, 
         userId: post.userId, 
         payeeId: post.payeeId,
-        note: post.note
+        note: post.note,
+        validated: post.validated
       }))
     }
 
   }),
 
+  getPayee: protectedProcedure.input(z.string()).query(async ({ input, ctx }) => {
+    const data = await ctx.prisma.payment.findMany({
+      where: {
+        spendingId: input
+      }})
+
+      return data.map(post => ({
+        id: post.id,
+        amount: post.amount,
+        resolved: post.resolved, 
+        userId: post.userId, 
+        payeeId: post.payeeId,
+        note: post.note,
+        validated: post.validated
+      }))
+    }),
+
   create: protectedProcedure.input(z.object({
     amount: z.number(),
-    resolved: z.boolean(), 
     userId: z.string(), 
     payeeId: z.string(), 
     spendingID: z.string(),
     note: z.string()
-  })).mutation(async ({input: {amount, resolved, spendingID, userId, payeeId, note}, ctx}) => {
+  })).mutation(async ({input: {amount, spendingID, userId, payeeId, note}, ctx}) => {
     
     return await ctx.prisma.payment.create({
       data: {
         userId: userId,
         payeeId: payeeId,
         amount: amount,
-        resolved: resolved,
         spendingId: spendingID,
         note: note
       }
     })
   }),
-  
+
+  resolve: protectedProcedure.input(z.string()).mutation( async ({ input, ctx }) => {
+    return await ctx.prisma.payment.update({
+      where: {
+        id: input
+      },
+      data: {
+        resolved: true
+      }
+    })
+  }),
+
+  validate: protectedProcedure.input(z.string()).mutation( async ({ input, ctx }) => {
+    return await ctx.prisma.payment.update({
+      where: {
+        id: input
+      },
+      data: {
+        validated: true
+      }
+    })
+  }),
 
 })

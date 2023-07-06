@@ -55,13 +55,10 @@ interface MyFormValues {
 
 function SpendingForm() {
   const utils = api.useContext(); 
-  const invalidQuery = () => {
-    utils.spending.invalidate()
-  } //invalidating takes some time 
 
   const createSpending = api.spending.create.useMutation({
-    onSuccess: (newSpending) => {
-      invalidQuery()
+    onSuccess: () => {
+      utils.spending.invalidate()
     }
   })
 

@@ -13,7 +13,8 @@ datasource db {
 model Payment {
     id String @id @default(uuid())
     amount Float
-    resolved Boolean
+    resolved Boolean @default(false)
+    validated Boolean @default(false)
     userId String //the one being owed
     payeeId String 
     spendingId String
