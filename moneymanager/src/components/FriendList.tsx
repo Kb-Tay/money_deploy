@@ -12,13 +12,11 @@ export default function FriendList({userId, followers, following}: FriendProps) 
   console.log(followers)
 
   return (
-    <>
-        <h1 className="font-medium text-xl py-2">Current Friends:</h1>
-        <div className="flex flex-cols">
+        <div className="profile">
           
             {
               followers?.filter(post => post.isFriend).map(post =>
-                <div className="flex flex-rows">
+                <div className="flex flex-rows items-center space-x-2">
                   <ProfileImg src={post.followingImg}/> 
                   <p key={post.followingId}>{post.followingName}</p>
                 </div>
@@ -27,13 +25,12 @@ export default function FriendList({userId, followers, following}: FriendProps) 
           
           {
             following?.filter(post => post.isFriend).map(post => 
-              <div key={post.followerId} className="flex flex-rows">
+              <div key={post.followerId} className="flex flex-rows items-cetner space-x-2 ">
                 <ProfileImg src={post.followerImg}/> 
                 <p key={post.followerName}>{post.followerName}</p>
             </div>
             )
           }
         </div>
-    </>
   )
 }

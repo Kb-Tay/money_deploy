@@ -20,4 +20,7 @@
     @apply bg-gray-200 border-2 border-gray-200 rounded focus:outline-none focus:border-cyan-500;
   }
 
+  .profile {
+    @apply flex flex-row justify-between border-2 rounded-lg px-2 py-2 items-center w-full
+  }
 }

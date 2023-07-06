@@ -1,6 +1,7 @@
 import { api } from "~/utils/api"
 import { Follows, followsProps } from "~/pages/search"
 import { useSession } from "next-auth/react"
+import ProfileImg from "./ProfileImg"
 
 export default function RequestList( props: followsProps) {
   const utils = api.useContext()
@@ -24,15 +25,17 @@ export default function RequestList( props: followsProps) {
 
   return (
     <>
-      <h1 className="font-medium text-xl py-2">Friend Requests:</h1>
-        <div className="flex flex-cols">
-          { props.follows?.filter(post => !post.isFriend).map( post => 
-            <ul key={post.followingId}>
+      <div>
+        { props.follows?.filter(post => !post.isFriend).map((post, ind) => 
+          <ul key={post.followingId} className="profile">
+            <div className="flex flex-row items-center space-x-2">
+              <ProfileImg src={post.followerImg}/>
               <div key={post.followerName}>{post.followerName}</div>
-              <button key={post.followerId} className="btn-primary" onClick={() => addFriend(post.followerId)}>Add</button>    
-            </ul>
-          )}
-        </div>
+            </div>
+            <button key={post.followerId} className="btn-primary" onClick={() => addFriend(post.followerId)}>Add</button>    
+          </ul>
+        )}
+      </div>
     </>
   )
 }

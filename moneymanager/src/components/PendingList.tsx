@@ -1,12 +1,16 @@
 import { Follows, followsProps } from "~/pages/search"
+import ProfileImg from "./ProfileImg"
 
 export default function PendingList(props: followsProps) {
 
   return (
     <>      
-      <h1 className="font-medium text-xl py-2">Pending Request:</h1>
-        <div className="flex flex-cols">
-          {props.follows?.filter(post => !post.isFriend).map(post => <div>{post.followingName}</div>)}
+        <div className="profile">
+          {props.follows?.filter(post => !post.isFriend).map((post, ind) => 
+          <div className="flex flex-row items-center space-x-2">
+          <ProfileImg src={post.followingImg}/>
+          <div key={ind}>{post.followingName}</div>
+          </div>)}
         </div>
     </>
   )
