@@ -6,21 +6,7 @@ export default function NavBar() {
   const session = useSession()
   const user = session.data?.user
   
-  //gets state from localstorage on refresh, else default home 
   const [active, setActive] = useState(0)
-    // const storedActive = typeof window !== 'undefined' ? localStorage.getItem('active') : null; 
-    // if (storedActive == null) {
-    //   return 0 
-    // } else {
-    //   return parseInt(storedActive)
-    // }
-
-  //Update the local storage when state updates 
-  // useEffect(() => {
-  //   localStorage.setItem('active', active.toString())
-  // }, [active])
-  
-  // styling for being focused
   
   const buttonStyle = { unfocused: "bg-gray-900",   focused: "bg-gray-500"}
 
@@ -31,21 +17,20 @@ export default function NavBar() {
 
           <div className="hidden sm:ml-6 sm:block">
             <div className="flex flex-row space-x-3 ">
+              { user == null ? (
               <Link href="/">
+                <button className={`hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium ${buttonStyle.unfocused}`}>
+                  Home
+                </button>
+              </Link>) : 
+              (<Link href="/">
                 <button className={`hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium 
                   ${active == 0 ? buttonStyle.focused : buttonStyle.unfocused}`}
                   onClick={() => setActive(0)}>
-                  Home
+                    New Spending
                 </button>
-              </Link>
-              { user == null ? (
-              <Link href="/about">
-                <button className={`hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium 
-                    ${active == 1 ? buttonStyle.focused : buttonStyle.unfocused}`}
-                    onClick={() => setActive(1)}>
-                    About
-                </button>
-              </Link>) : (
+              </Link>)}
+              { user == null ? <></> : (
               <Link href="/profile">
               <button className={`hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium 
                   ${active == 1 ? buttonStyle.focused : buttonStyle.unfocused}`}
@@ -54,6 +39,15 @@ export default function NavBar() {
               </button>
               </Link>
               )}
+              { user == null ? <></> : (
+                <Link href="/search">
+                <button className={`hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium 
+                    ${active == 2 ? buttonStyle.focused : buttonStyle.unfocused}`}
+                    onClick={() => setActive(2)}>
+                    Search Friends
+                </button>
+                </Link>
+              )}
             </div>
           </div>
 
@@ -61,7 +55,7 @@ export default function NavBar() {
             <div className="flex flex-row space-x-3 ">
               {user == null ? (
                 <Link href='/'>
-                  <button className='bg-gray-900 hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium' onClick={() => void signIn("discord", {callbackUrl: "/"})}>Sign In</button> 
+                  <button className='bg-gray-900 hover:bg-slate-500 text-white rounded-md px-3 py-2 text-sm font-medium' onClick={() => void signIn("google",{callbackUrl: "/"})}>Sign In</button> 
                 </Link>
               ) : (
                 <Link href='/'>

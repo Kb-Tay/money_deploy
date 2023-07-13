@@ -8,15 +8,25 @@ import { RxPencil2 } from 'react-icons/rx'
 import Link from 'next/link'
 import { Select } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
+import { api } from "~/utils/api"
 
 
 export function SpendingData({spendings}: SpendingProps) {
   const [filter, setFilter] = useState('Month') 
   const [data, setData] = useState<Spending[]>([]) 
+  const deleteSpending = api.spending.delete.useMutation({
+    onSuccess: () => { utils.spending.invalidate()}
+  })
 
+  const utils = api.useContext()
+  
   const currDate = new Date()
   const currMonth = currDate.getMonth()
   const currYear = currDate.getFullYear() 
+
+  const handleDelete = (id: string) => { 
+    deleteSpending.mutate(id)
+  }
   
   useEffect(() => {
     if(spendings != undefined) {
@@ -31,7 +41,7 @@ export function SpendingData({spendings}: SpendingProps) {
     }
 
     console.log(filter)
-  }, [filter])
+  }, [filter, spendings])
   
   return (
     <div className="relative bg-slate-500 w-full px-4 py-2 rounded-lg border">  
@@ -79,7 +89,9 @@ export function SpendingData({spendings}: SpendingProps) {
               <RxPencil2 className="hover:text-white hover:cursor-pointer w-8 h-8"/> 
             </Link>
             
+            <button onClick={() => handleDelete(post.id)}> 
               <FaRegTrashAlt className="hover:text-red-700 hover:cursor-pointer w-8 h-8"/>
+            </button>
           </div>
 
         </div>

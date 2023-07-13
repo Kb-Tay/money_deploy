@@ -33,12 +33,38 @@ export default function Page() {
   const utils = api.useContext()
 
   const [search, setSearch] = useState('')
+  const [friends, setFriends] = useState(false)
+  const [pending, setPending] = useState(false)
+  const [request, setRequest] = useState(false)
+
+
   const session = useSession()
   const userId = session.data?.user.id as string
   const user = session.data?.user
 
   const following = api.user.getFollowing.useQuery(userId) 
   const followers = api.user.getFollowers.useQuery(userId)
+
+  const followingSet = new Set<string>()
+  const followerSet = new Set<string>() 
+
+  if (following.data != undefined) {
+    for (let i = 0; i < following.data.length; i++) {
+      const check = following.data[i]
+      if (check != undefined) {
+        followingSet.add(check.followerId)
+      }
+    }
+  }
+  
+  if (followers.data != undefined) {
+    for (let i = 0; i < followers.data.length; i++) {
+      const check = followers.data[i]
+      if (check != undefined) {
+        followerSet.add(check.followingId)
+      }
+    }
+  }
 
   const createFollower = api.user.createFriend.useMutation({
     onSuccess: () => {
@@ -64,14 +90,48 @@ export default function Page() {
   
   return (
     <div className="py-3">
-      <div className="grid grid-cols-2">
-        <div className="cols-span-1 pl-3">
-          <FriendList userId={userId} followers={followers.data} following={following.data}/> 
-          <PendingList follows={followers.data}/>
-          <RequestList follows={following.data}/> 
+      <div className="md:grid md:grid-cols-4"> 
+        <div className="px-5">
+          <div className="px-2 py-1 ">
+            <div className="flex justify-between items-center space-x-4">   
+              <h1 className="font-medium text-xl py-2">Current Friends:</h1> 
+              { friends ? <button className='btn-primary' onClick={() => setFriends(!friends)}>Close</button> 
+              : <button className='btn-primary' onClick={() => setFriends(!friends)}>Show</button>}
+            </div>  
+            { friends ? <FriendList userId={userId} followers={followers.data} following={following.data}/> : <></>}
+          </div> 
+
+        </div>
+              
+        <div className="px-5">
+          <div className="px-2 py-1">
+            <div className="flex justify-between items-center space-x-4"> 
+              <h1 className="font-medium text-xl py-2">Pending Request:</h1>
+              { followers.data?.filter(post => !post.isFriend).length == 0 ? <p className="text-md">No pending Request</p> :
+              <div>
+                { pending ? <button className='btn-primary' onClick={() => setPending(!pending)}>Close</button> 
+                : <button className='btn-primary' onClick={() => setPending(!pending)}>Show</button>}
+              </div>
+              }
+            </div>
+            { pending ? <PendingList follows={followers.data}/> : <></>}
+          </div>
+
+          <div className="px-2 py-1">
+            <div className="flex justify-between items-center space-x-4"> 
+              <h1 className="font-medium text-xl py-2">Friend Requests:</h1>
+              { following.data?.filter(post => !post.isFriend).length == 0 ? <p className="text-md">No current Request</p> :
+              <div>
+                { request ? <button className='btn-primary' onClick={() => setRequest(!request)}>Close</button> 
+                : <button className='btn-primary' onClick={() => setRequest(!request)}>Show</button>}
+              </div>
+              }
+            </div>
+            { request ? <RequestList follows={following.data}/> : <></>}
+          </div>
         </div>
         
-        <div className="cols-span-2">
+        <div className="col-span-2">
           <div className="flex flex-row justify-center space-x-4 items-center pb-3"> 
             <h1 className="font-medium text-xl">Search Friends:</h1>
             <Input placeholder="Enter username" w={300} onChange={e => setSearch(e.target.value)}/>
@@ -92,12 +152,18 @@ export default function Page() {
                     <ProfileImg key={post.image} src={post.image}/>
                     <p key={post.name} className="font-mono text-xl">{post.name}</p>
                   </div>
-                  <button key={post.id} className="btn-primary h-8" onClick={() => {handleSubmit(post)}}>Add</button> 
+                  { followerSet.has(post.id) 
+                    ? <p className="text-sm">Request Sent</p> 
+                    : followingSet.has(post.id) 
+                    ? <p className="text-sm">Pending Request</p> 
+                    : <button key={post.id} className="btn-primary h-8" onClick={() => {handleSubmit(post)}}>Add</button> 
+                  }
                 </div>
               </div> 
             )}
           </div>
         </div>
+
       </div>
       
 

@@ -10,6 +10,17 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Target { 
+  id String @id @default(uuid()) 
+  userId String
+  bank Float 
+  income Float 
+  monthly Float 
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
 model Payment {
     id String @id @default(uuid())
     amount Float
@@ -84,9 +95,10 @@ model User {
     sessions      Session[]
     spendings     Spending[]
     payments      Payment[]
-    goals         Float?
+    target        Target[]
     followedBy    Follows[] @relation("following")
     following     Follows[] @relation("follower") 
+    expenditure   Float @default(0)
 }
 
 model Follows {

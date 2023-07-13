@@ -1,4 +1,3 @@
-import { CiText } from "react-icons/ci";
 import { z } from "zod";
 import {
   createTRPCRouter,
