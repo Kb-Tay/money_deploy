@@ -120,6 +120,14 @@ export const usersRouter = createTRPCRouter({
     })
   }), 
 
-
-
+  updateExpenditure: protectedProcedure.input(z.number()).mutation( async({ input, ctx }) => {
+    return await ctx.prisma.user.update({
+      where: {
+        id: ctx.session.user.id
+      }, 
+      data: {
+        expenditure: input
+      }
+    })
+  }),
 })

@@ -105,10 +105,10 @@ function NewForm({spendingID, spendingTotal, content, totalAssigned, date}: AddP
                 <label htmlFor="payeeId">Add Payee:</label>
                 <Field as="select" id="payeeId" name="payeeId" type="string" className="form-primary">
                 <option value="" disabled>Select Friend</option>
-                  {followers?.map((post, index) => (
+                  {followers?.filter(post => post.isFriend).map((post, index) => (
                       <option key={index} value={`${post.followingId}`}>{post.followingName}</option>
                     ))}
-                  {following?.map((post, index) => (
+                  {following?.filter(post => post.isFriend).map((post, index) => (
                       <option key={index} value={`${post.followerId}`}>{post.followerName}</option>
                     ))}
                 </Field>

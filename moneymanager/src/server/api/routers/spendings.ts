@@ -123,6 +123,14 @@ export const spendingsRouter = createTRPCRouter({
           }
         })
       }  
-    )
+    ), 
+
+    delete: protectedProcedure.input(z.string()).mutation(async ({input, ctx}) => {
+      return await ctx.prisma.spending.delete({
+        where: {
+          id: input
+        }
+      })
+    })
 
 }); 

@@ -21,6 +21,14 @@
   }
 
   .profile {
-    @apply flex flex-row justify-between border-2 rounded-lg px-2 py-2 items-center w-full
+    @apply flex flex-row justify-between border-2 rounded-lg px-2 py-2 items-center w-full;
+  }
+
+  .card-primary{
+    @apply w-3/4 h-1/6 bg-white rounded-lg grid grid-cols-4 border-2 border-slate-500;
+  }
+  
+  .form-target{
+    @apply appearance-none focus:outline-none bg-transparent font-medium text-2xl ml-2;
   }
 }

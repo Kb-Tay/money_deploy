@@ -1,9 +1,10 @@
-import { SpendingProps } from "~/pages/profile"
+import { ExpenseProps } from "~/pages/profile"
 import { api } from "~/utils/api"
 import ProfileImg from "./ProfileImg"
 import Payee from "./Payee"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { useState, useEffect } from 'react';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -15,8 +16,8 @@ export type Payment = {
   payeeId: string, 
 }
 
-export default function Expense({spendings, userId}: SpendingProps) {
-  const payments = api.payment.getPayments.useQuery(userId) 
+export default function Expense({spendings, collect, paid}: ExpenseProps) {
+  // const payments = api.payment.getPayments.useQuery(userId) 
 
   const currMonth = new Date().getMonth() //not sure if this refreshes when 
   const currYear = new Date().getFullYear()
@@ -31,8 +32,8 @@ export default function Expense({spendings, userId}: SpendingProps) {
   
 
   // find out how to query payments by same month instead of filter after querying all 
-  const collect = payments.data?.collect.filter(post => post.validated && post.date.getFullYear() == currYear && post.date.getMonth() == currMonth).reduce((sum: number, post) => sum + post.amount, 0) ?? 0
-  const paid = payments.data?.owe.filter(post => post.validated && post.date.getFullYear() == currYear && post.date.getMonth() == currMonth).reduce((sum: number, post) => sum + post.amount, 0) ?? 0
+  // const collect = payments.data?.collect.filter(post => post.validated && post.date.getFullYear() == currYear && post.date.getMonth() == currMonth).reduce((sum: number, post) => sum + post.amount, 0) ?? 0
+  // const paid = payments.data?.owe.filter(post => post.validated && post.date.getFullYear() == currYear && post.date.getMonth() == currMonth).reduce((sum: number, post) => sum + post.amount, 0) ?? 0
 
   const total = totalMonthly - collect + paid
 
