@@ -11,28 +11,22 @@ import {
 import { useDisclosure } from '@chakra-ui/react'
 import {
   Formik,
-  FormikHelpers,
-  FormikProps,
   Form,
   Field,
-  FieldProps,
+} from 'formik';
+import type {
   FormikErrors,
-  ErrorMessage,
-  useFormik,
 } from 'formik';
 import { api } from '~/utils/api';
-import { useSession } from 'next-auth/react';
-import { TargetComponentProps, TargetForm } from './Target';
+import type { TargetComponentProps, TargetForm } from './Target';
 import { useToast } from '@chakra-ui/react';
 
 
 export default function TargetForm({expenses, id, bank, income, monthly}: TargetComponentProps ) {
-  const session = useSession()
-  const user = session.data?.user.id as string
   const utils = api.useContext()
   const updateTarget = api.target.editTarget.useMutation({
-    onSuccess: () => {
-      utils.target.invalidate()
+    onSuccess: async () => {
+      await utils.target.invalidate()
       toast({
         title: "Successfully updated",
                 status: 'success',

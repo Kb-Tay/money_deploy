@@ -1,8 +1,7 @@
 import { api } from "~/utils/api"
 import { Input } from "@chakra-ui/react"
-import Image from "next/image"
 import ProfileImg from "~/components/ProfileImg"
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useSession } from "next-auth/react"
 import PendingList from "~/components/PendingList"
 import RequestList from "~/components/RequestList"
@@ -67,8 +66,8 @@ export default function Page() {
   }
 
   const createFollower = api.user.createFriend.useMutation({
-    onSuccess: () => {
-      utils.user.invalidate()
+    onSuccess: async () => {
+      await utils.user.invalidate()
     }
   })
 
@@ -80,7 +79,7 @@ export default function Page() {
 
       createFollower.mutate({
         followerId: userId, 
-        followingId: info.id as string,
+        followingId: info.id,
         followerName: userName,
         followingName: friendName,
         followerImg: userImg,
@@ -98,7 +97,7 @@ export default function Page() {
               { friends ? <button className='btn-primary' onClick={() => setFriends(!friends)}>Close</button> 
               : <button className='btn-primary' onClick={() => setFriends(!friends)}>Show</button>}
             </div>  
-            { friends ? <FriendList userId={userId} followers={followers.data} following={following.data}/> : <></>}
+            { friends ? <FriendList followers={followers.data} following={following.data}/> : <></>}
           </div> 
 
         </div>

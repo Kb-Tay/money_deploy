@@ -2,9 +2,7 @@ import { api } from "~/utils/api"
 import Target from "~/components/Target"
 import { useSession } from "next-auth/react"
 import { SpendingData } from "~/components/SpendingData"
-import ProfileImg from "~/components/ProfileImg"
 import Expense from "~/components/Expense"
-import { useEffect } from "react"
 
 export type Spending = { 
   id: string, 

@@ -1,4 +1,4 @@
-import { Spending, SpendingProps } from "~/pages/profile"
+import type { Spending, SpendingProps } from "~/pages/profile"
 import { AiOutlineShopping } from 'react-icons/ai' 
 import { IoFastFoodOutline } from 'react-icons/io5'
 import { MdEmojiTransportation } from 'react-icons/md'
@@ -15,7 +15,7 @@ export function SpendingData({spendings}: SpendingProps) {
   const [filter, setFilter] = useState('Month') 
   const [data, setData] = useState<Spending[]>([]) 
   const deleteSpending = api.spending.delete.useMutation({
-    onSuccess: () => { utils.spending.invalidate()}
+    onSuccess: async () => { await utils.spending.invalidate()}
   })
 
   const utils = api.useContext()
@@ -41,7 +41,7 @@ export function SpendingData({spendings}: SpendingProps) {
     }
 
     console.log(filter)
-  }, [filter, spendings])
+  }, [filter, spendings, currMonth, currYear])
   
   return (
     <div className="relative bg-slate-500 w-full px-4 py-2 rounded-lg border">  

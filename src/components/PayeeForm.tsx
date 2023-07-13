@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Formik,
   Form,
   Field,
-  FormikErrors,
   ErrorMessage,
 } from 'formik';
+
+import type {
+  FormikErrors,
+} from 'formik';
+
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import Email from "next-auth/providers/email";
 import Payee from "./Payee";
 import { TiTickOutline } from "react-icons/ti"
 import { BiErrorCircle } from "react-icons/bi"
@@ -32,16 +34,15 @@ type AddPayeeProps = {
 function NewForm({spendingID, spendingTotal, content, totalAssigned, date}: AddPayeeProps) {
   const session = useSession()
   const userId = session.data?.user.id as string
-  const userName = session.data?.user.name as string
   const utils = api.useContext()
 
   const following = api.user.getFollowing.useQuery(userId).data
   const followers = api.user.getFollowers.useQuery(userId).data
   
   const createPayment = api.payment.create.useMutation({
-    onSuccess: (input) => {
-      utils.payment.invalidate()
-      }
+    onSuccess: async () => {
+      await utils.payment.invalidate()
+    }
   })
 
   interface MyFormValues {
@@ -155,14 +156,12 @@ function NewForm({spendingID, spendingTotal, content, totalAssigned, date}: AddP
 
 export default function PayeeForm({spendingID, content, spendingTotal, date}: PayeeFormProps) {
   const [close, setClose] = useState(false)
-  const session = useSession()
-  const userId = session.data?.user.id as string
   const utils = api.useContext()
 
-  const { isLoading, data } = api.payment.getPayee.useQuery(spendingID)
+  const { data } = api.payment.getPayee.useQuery(spendingID)
   const validatePayment = api.payment.validate.useMutation({
-    onSuccess: (editSpending) => { 
-      utils.payment.invalidate() // find out how to invalidate 
+    onSuccess: async () => { 
+      await utils.payment.invalidate() // find out how to invalidate 
     }
   })
   
