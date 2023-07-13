@@ -17,9 +17,8 @@ export type Payment = {
 }
 
 export default function Expense({spendings, collect, paid}: ExpenseProps) {
-  // const payments = api.payment.getPayments.useQuery(userId) 
 
-  const currMonth = new Date().getMonth() //not sure if this refreshes when 
+  const currMonth = new Date().getMonth()  
   const currYear = new Date().getFullYear()
 
   const dataMonthly = spendings?.filter(post => (post.createdAt.getMonth() == currMonth && post.createdAt.getFullYear() == currYear))
@@ -30,11 +29,6 @@ export default function Expense({spendings, collect, paid}: ExpenseProps) {
   const transExp = dataMonthly?.filter(post => post.category == 'Transporation').reduce((sum: number, post) => sum + post.money, 0) ?? 0 
   const finExp = dataMonthly?.filter(post => post.category == 'Financial Expenses').reduce((sum: number, post) => sum + post.money, 0) ?? 0
   
-
-  // find out how to query payments by same month instead of filter after querying all 
-  // const collect = payments.data?.collect.filter(post => post.validated && post.date.getFullYear() == currYear && post.date.getMonth() == currMonth).reduce((sum: number, post) => sum + post.amount, 0) ?? 0
-  // const paid = payments.data?.owe.filter(post => post.validated && post.date.getFullYear() == currYear && post.date.getMonth() == currMonth).reduce((sum: number, post) => sum + post.amount, 0) ?? 0
-
   const total = totalMonthly - collect + paid
 
   const data = {

@@ -11,10 +11,6 @@ import chakraTheme from '@chakra-ui/theme'
 import { useEffect } from "react";
 
 
-export function updateDB() {
-
-}
-
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
