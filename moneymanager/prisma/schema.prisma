@@ -10,14 +10,46 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Target { 
+  id String @id @default(uuid()) 
+  userId String
+  bank Float 
+  income Float 
+  monthly Float 
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model Payment {
+    id String @id @default(uuid())
+    amount Float
+    resolved Boolean @default(false)
+    validated Boolean @default(false)
+    userId String //the one being owed
+    payeeId String 
+    spendingId String
+    note String? 
+    createdAt DateTime
+
+    spending Spending @relation(fields:[spendingId], references: [id], onDelete: Cascade)
+    user User @relation(fields:[userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+    @@index([spendingId])
+}
+
 model Spending {
-    id  String @id @default(uuid())
-    userId String
-    money Float?
-    content String 
-    createdAt DateTime @default(now())
+    id  String @id @default(uuid()) 
+    userId String 
+    money Float
+    category String
+    content String
+    createdAt DateTime 
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    payment Payment[]
+
     @@unique([createdAt, id])
     @@index([userId])
 }
@@ -62,6 +94,28 @@ model User {
     accounts      Account[]
     sessions      Session[]
     spendings     Spending[]
+    payments      Payment[]
+    target        Target[]
+    followedBy    Follows[] @relation("following")
+    following     Follows[] @relation("follower") 
+    expenditure   Float @default(0)
+}
+
+model Follows {
+  follower    User @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User @relation("following", fields: [followingId], references: [id])
+  followingId String
+  followerName String?
+  followerImg String?
+  followingName String? 
+  followingImg String?
+  isFriend Boolean @default(false)
+
+  @@id([followerId, followingId])
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
 }
 
 model VerificationToken {
