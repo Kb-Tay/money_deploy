@@ -1,5 +1,5 @@
 import { api } from "~/utils/api"
-import { Follows, followsProps } from "~/pages/search"
+import type {  followsProps } from "~/pages/search"
 import { useSession } from "next-auth/react"
 import ProfileImg from "./ProfileImg"
 
@@ -9,8 +9,8 @@ export default function RequestList( props: followsProps) {
   const userId = session.data?.user.id as string
 
   const addFriendProcedure = api.user.addFriend.useMutation({
-    onSuccess: (values) => {
-      utils.user.invalidate()
+    onSuccess: async () => {
+      await utils.user.invalidate()
     }
   })
   
@@ -26,7 +26,7 @@ export default function RequestList( props: followsProps) {
   return (
     <>
       <div>
-        { props.follows?.filter(post => !post.isFriend).map((post, ind) => 
+        { props.follows?.filter(post => !post.isFriend).map((post) => 
           <ul key={post.followingId} className="profile">
             <div className="flex flex-row items-center space-x-2">
               <ProfileImg src={post.followerImg}/>
