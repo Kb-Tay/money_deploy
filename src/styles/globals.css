@@ -25,7 +25,7 @@
   }
 
   .card-primary{
-    @apply w-3/4 h-1/6 bg-white rounded-lg grid grid-cols-4 border-2 border-slate-500;
+    @apply sm:w-3/4 sm:h-1/6 w-full h-16 bg-white rounded-lg grid grid-cols-4 border-2 border-slate-500;
   }
   
   .form-target{
