@@ -14,15 +14,15 @@ export default function HomePage ()  {
         <h2 className="text-xl font-medium text-slate-600">and track spending among friends</h2>
       </div>
       <div className=""> 
-        <h2 className="flex justify-center text-3xl font-medium pt-20">Our Features</h2>
+        <h2 className="flex justify-center text-3xl font-medium sm:pt-20">Our Features</h2>
         
-        <div className="flex flex-col items-center h-2/3 px-10 pt-10 space-y-4">
+        <div className="flex flex-col items-center h-2/3 sm:px-10 pt-10 space-y-4">
           <div className="card-primary">
             <div className="flex items-center justify-center border-r-2 border-slate-300">
               <BsClipboard2Check className="h-10 w-10"/>
             </div>
             <div className="col-span-3 flex px-2 items-center">
-              <p className="text-xl">Easy forms to track daily expenses</p>
+              <p className="sm:text-xl">Easy forms to track daily expenses</p>
             </div>
           </div>
 
@@ -30,8 +30,8 @@ export default function HomePage ()  {
             <div className="flex items-center justify-center border-r-2 border-slate-300">
               <FaUserFriends className="h-10 w-10"/>
             </div>
-            <div className="col-span-3 flex px-2 items-center">
-              <p className="text-xl">Split bills among friends and track payments</p>
+            <div className="col-span-3 px-2 items-center">
+              <p className="sm:text-xl">Split bills among friends and track payments</p>
             </div>
           </div>
 
@@ -39,8 +39,8 @@ export default function HomePage ()  {
             <div className="flex items-center justify-center border-r-2 border-slate-300">
               <VscGraphLine className="h-10 w-10"/>
             </div>
-            <div className="col-span-3 flex px-2 items-center">
-              <p className="text-xl">Simple data analysis for monthly expenditures</p>
+            <div className="col-span-3 px-2 items-center">
+              <p className="sm:text-xl">Simple data analysis for monthly expenditures</p>
             </div> 
           </div>
 
