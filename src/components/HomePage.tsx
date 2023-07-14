@@ -6,7 +6,7 @@ import { signIn } from 'next-auth/react'
 export default function HomePage ()  { 
   return ( 
     <section className=""> 
-    <div className="h-screen w-screen md:grid md:grid-cols-2">
+    <div className="h-screen w-screen sm:grid sm:grid-cols-2">
       <div className="flex flex-col items-center bg-gray-300 pt-10">      
           <img className="h-1/2 width-10 object-cover object-center" alt="hero" src='../../hero.png'/>
         <h1 className="text-5xl font-extrabold text-slate-700 pb-5">Money Manager App</h1>
@@ -21,7 +21,7 @@ export default function HomePage ()  {
             <div className="flex items-center justify-center border-r-2 border-slate-300">
               <BsClipboard2Check className="h-10 w-10"/>
             </div>
-            <div className="col-span-3 flex px-2 items-center">
+            <div className="sm:col-span-3 flex px-2 items-center">
               <p className="sm:text-xl">Easy forms to track daily expenses</p>
             </div>
           </div>
@@ -30,7 +30,7 @@ export default function HomePage ()  {
             <div className="flex items-center justify-center border-r-2 border-slate-300">
               <FaUserFriends className="h-10 w-10"/>
             </div>
-            <div className="col-span-3 px-2 items-center">
+            <div className="sm:col-span-3 px-2 items-center">
               <p className="sm:text-xl">Split bills among friends and track payments</p>
             </div>
           </div>
@@ -39,7 +39,7 @@ export default function HomePage ()  {
             <div className="flex items-center justify-center border-r-2 border-slate-300">
               <VscGraphLine className="h-10 w-10"/>
             </div>
-            <div className="col-span-3 px-2 items-center">
+            <div className="sm:col-span-3 px-2 items-center">
               <p className="sm:text-xl">Simple data analysis for monthly expenditures</p>
             </div> 
           </div>
