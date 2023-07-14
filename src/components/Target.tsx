@@ -1,11 +1,9 @@
 import ProfileImg from "./ProfileImg";
 import Link from "next/link";
-import { TargetProps } from "~/pages/profile";
+import type { TargetProps } from "~/pages/profile";
 import { api } from "~/utils/api";
 import Payee from "./Payee";
 import TargetForm from "./TargetForm";
-import { create } from "domain";
-import { useContext } from "react";
 
 export type TargetForm = {
   id: string,
@@ -24,10 +22,10 @@ export type TargetComponentProps = {
 
 export default function Target({src, name, userId, expenses}: TargetProps) {
   const utils = api.useContext()
-  const { isLoading, data } = api.payment.getPayments.useQuery(userId)
+  const { data } = api.payment.getPayments.useQuery(userId)
   const createTarget = api.target.createTarget.useMutation({
-    onSuccess: () => {
-      utils.target.invalidate()
+    onSuccess: async () => {
+      await utils.target.invalidate()
     }
   })
   const target = api.target.getTarget.useQuery()
@@ -41,14 +39,14 @@ export default function Target({src, name, userId, expenses}: TargetProps) {
   }
 
   const resolvePayment = api.payment.resolve.useMutation({
-    onSuccess: (editSpending) => { 
-      utils.payment.invalidate() // find out how to invalidate 
+    onSuccess: async () => { 
+      await utils.payment.invalidate() // find out how to invalidate 
     }
   })
 
   const validatePayment = api.payment.validate.useMutation({
-    onSuccess: (editSpending) => { 
-      utils.payment.invalidate() // find out how to invalidate 
+    onSuccess: async () => { 
+      await utils.payment.invalidate() // find out how to invalidate 
     }
   })
 

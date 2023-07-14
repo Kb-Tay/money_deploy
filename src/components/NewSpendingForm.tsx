@@ -1,18 +1,17 @@
-import { ChangeEvent, useState } from "react";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import {
   Formik,
-  FormikHelpers,
-  FormikProps,
   Form,
   Field,
-  FieldProps,
-  FormikErrors,
   ErrorMessage,
-  useFormik,
 } from 'formik';
-import { useTabList, useToast } from "@chakra-ui/react";
+
+import type {
+  FormikErrors,
+} from 'formik';
+
+import {  useToast } from "@chakra-ui/react";
 
 
 export function NewSpendingForm() {
@@ -56,8 +55,8 @@ function SpendingForm() {
   const utils = api.useContext(); 
 
   const createSpending = api.spending.create.useMutation({
-    onSuccess: () => {
-      utils.spending.invalidate()
+    onSuccess: async () => {
+      await utils.spending.invalidate()
     }
   })
 

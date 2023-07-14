@@ -1,16 +1,14 @@
 import { api } from "~/utils/api";
 import {
   Formik,
-  FormikHelpers,
-  FormikProps,
   Form,
   Field,
-  FieldProps,
+} from 'formik';
+import type {
   FormikErrors
 } from 'formik';
 import React from 'react'
-import { GetStaticPaths, GetStaticPropsContext, InferGetServerSidePropsType, NextPage } from "next";
-import { GetStaticProps } from "next";
+import type { GetStaticPaths, GetStaticPropsContext, InferGetServerSidePropsType, NextPage } from "next";
 import { ssgHelper } from "~/server/api/ssgHelper";
 import Link from "next/link";
 import PayeeForm from "~/components/PayeeForm";
@@ -20,9 +18,10 @@ import { useToast } from "@chakra-ui/react";
 const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => { 
   const { isLoading, data } = api.spending.getUnique.useQuery({ userid: id })
   const toast = useToast()
+  const utils = api.useContext()
 
   const updateSpending = api.spending.edit.useMutation({
-    onSuccess: (editSpending) => { console.log(editSpending)}
+    onSuccess: async () => { await utils.spending.invalidate() }
   })
 
   const spendingTotal = data?.money ?? 0 
