@@ -104,7 +104,7 @@ function NewForm({spendingID, spendingTotal, content, totalAssigned, date}: AddP
             <div className="md:flex md:flex-row md:space-x-3 md:space-y-0 space-y-2">
               <div className="space-x-2">
                 <label htmlFor="payeeId">Add Payee:</label>
-                <Field as="select" id="payeeId" name="payeeId" type="string" className="form-primary">
+                <Field as="select" id="payeeId" name="payeeId" type="string" className="form-primary w-full">
                 <option value="" disabled>Select Friend</option>
                   {followers?.filter(post => post.isFriend).map((post, index) => (
                       <option key={index} value={`${post.followingId}`}>{post.followingName}</option>
@@ -116,15 +116,15 @@ function NewForm({spendingID, spendingTotal, content, totalAssigned, date}: AddP
               </div>
               <div className="space-x-2">
                 <label htmlFor="amount">Add Amount:</label>
-                <Field type="number" id="amount"  name="amount" placeholder="Enter Amount" className="form-primary"/>
+                <Field type="number" id="amount"  name="amount" placeholder="Enter Amount" className="form-primary w-full"/>
               </div>
               <div className="space-x-2">
                 <label htmlFor="note">Payment Note:</label>
-                <Field type="string" id="note" name="note" placeholder="Add note" className="form-primary"/>    
+                <Field type="string" id="note" name="note" placeholder="Add note" className="form-primary w-full"/>    
               </div>
             </div>
-            <div className="md:pt-0 pt-2 pl-8">
-              <button type="submit" className="btn-primary px-10">Add Payee</button>
+            <div className="md:pt-0 pt-2 sm:pl-8 pl-2">
+              <button type="submit" className="btn-primary px-10 w-full">Add Payee</button>
             </div>
 
 

@@ -21,7 +21,9 @@ export default function NavBar() {
             <AiOutlineMenu className="h-8 w-8 text-white" onClick={() => setDrop(!drop)}/>
             { 
               drop ? user == null 
-                ? <></>
+                ? <div className="absolute left-0 top-14 z-10 mt-2 w-40 divide-y divide-slate-400 rounded-md bg-slate-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-xl"> 
+                    <button className='text-white pl-2' onClick={() => void signIn("google",{callbackUrl: "/"})}>Sign In</button>
+                  </div>
                 :
                 <div className="absolute left-0 top-14 z-10 mt-2 w-40 divide-y divide-slate-400 rounded-md bg-slate-700 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-xl">
                   <div className="flex flex-col pl-2 space-y-1">

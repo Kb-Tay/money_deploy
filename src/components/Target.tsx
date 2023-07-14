@@ -81,7 +81,7 @@ export default function Target({src, name, userId, expenses}: TargetProps) {
               {
                 data?.owe.filter(post => !post.resolved)
                 .map((post, ind) => 
-                    <ul key={ind} className="lg:grid lg:grid-cols-5">
+                    <ul key={ind} className="grid grid-cols-5">
                     <div className="flex flex-cols space-x-2 pr-2">
                       <p>{ind + 1}.</p>
                       <Payee userId={post.userId}/>                      
@@ -102,7 +102,7 @@ export default function Target({src, name, userId, expenses}: TargetProps) {
               {
                 data?.collect.filter(post => !post.validated)
                 .map((post, ind) => 
-                    <ul key={ind} className="lg:grid lg:grid-cols-5">
+                    <ul key={ind} className="grid grid-cols-5">
                     <div className="flex flex-cols space-x-2 pr-2">
                       <p>{ind + 1}.</p>
                       <Payee userId={post.payeeId}/>                      

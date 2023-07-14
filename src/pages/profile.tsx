@@ -56,7 +56,7 @@ export default function Page() {
   }
 
   return (
-    <div className="px-20 py-4">
+    <div className="sm:px-20 py-4">
       <div className="grid lg:grid-cols-2 gap-4 pb-3">
         <Target src={session.data.user.image} name={session.data.user.name} userId={user} expenses={expenses}/>
         <Expense spendings={data.spending} collect={collect} paid={paid}/> 

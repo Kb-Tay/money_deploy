@@ -94,7 +94,7 @@ function SpendingForm() {
          }}
        >
          <Form className="md:px-20 pt-4">
-          <div className="flex flex-col justify-center md:mx-10 py-3 space-y-2 bg-slate-500 rounded-lg">
+          <div className="flex flex-col justify-center md:mx-10 px-2 py-3 space-y-2 bg-slate-500 rounded-lg">
 
               <h2 className="flex justify-center text-4xl font-extrabold">Add a Expense</h2>
 
@@ -109,12 +109,11 @@ function SpendingForm() {
                 <ErrorMessage name="Amount" component="div" className="error"/>
 
 
-                <div className="justify-center">
+                <div className="sm:justify-center">
                   <div className="grid grid-cols-4">  
-                    <div></div>
-                    <label className="flex justify-center font-medium"htmlFor="Category">Category:</label>
+                    <label className="flex sm:justify-end sm:pr-2 font-medium col-span-1"htmlFor="Category">Category:</label>
                     <Field as="select" id="Category" name="Category" type="string"
-                    className="form-primary w-2/3">
+                    className="form-primary sm:w-2/3 sm:col-span-3 col-span-4">
                     <option value="" disabled>Select a Category</option>
                     <option value="Food & Drinks">Food & Drinks</option>
                     <option value="Shopping">Shopping</option>
@@ -129,10 +128,8 @@ function SpendingForm() {
 
                 <div className="justify-center">
                   <div className="grid grid-cols-4">
-                    <div>
-                    </div>
-                    <label className="flex justify-center font-medium pr-8" htmlFor="Date">Date:</label>
-                    <Field id="Date" name="Date" type="Date" className="form-primary w-2/3"/>
+                    <label className="flex sm:justify-end sm:pr-2 font-medium col-span-1" htmlFor="Date">Date:</label>
+                    <Field id="Date" name="Date" type="Date" className="form-primary sm:w-2/3 sm:col-span-3 col-span-4"/>
                   </div>
                 </div>
                 
@@ -140,11 +137,8 @@ function SpendingForm() {
 
                 <div className="justify-center">
                   <div className="grid grid-cols-4">
-                  <div></div>
-                  <label className="flex justify-center font-medium pr-6" htmlFor="Content">Notes:</label>
-                  <div>
-                    <Field id="Content" name="Content" className="form-primary w-2/3"/>
-                  </div>
+                  <label className="flex sm:justify-end sm:pr-2 font-medium col-span-1" htmlFor="Content">Notes:</label>
+                  <Field id="Content" name="Content" className="form-primary sm:w-2/3 sm:col-span-3 col-span-4"/>
                   </div>
                 </div>
                 <div className="flex justify-center">

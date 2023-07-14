@@ -131,7 +131,7 @@ export default function Page() {
         </div>
         
         <div className="col-span-2">
-          <div className="flex flex-row justify-center space-x-4 items-center pb-3"> 
+          <div className="flex flex-row justify-center space-x-4 items-center pb-3 px-2"> 
             <h1 className="font-medium text-xl">Search Friends:</h1>
             <Input placeholder="Enter username" w={300} onChange={e => setSearch(e.target.value)}/>
           </div>
@@ -146,7 +146,7 @@ export default function Page() {
               }
             }).map(post => 
               <div key={post.id} className="flex flex-row justify-center">
-                <div className="flex flex-row justify-between border-2 rounded-lg px-2 py-2 items-center w-1/2">
+                <div className="flex flex-row justify-between border-2 rounded-lg px-2 py-2 items-center sm:w-1/2 w-3/4">
                   <div className="flex flex-row items-center" >
                     <ProfileImg key={post.image} src={post.image}/>
                     <p key={post.name} className="font-mono text-xl">{post.name}</p>
