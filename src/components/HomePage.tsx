@@ -19,28 +19,28 @@ export default function HomePage ()  {
         <div className="flex flex-col items-center h-2/3 sm:px-10 pt-10 space-y-4">
           <div className="card-primary">
             <div className="flex items-center justify-center border-r-2 border-slate-300">
-              <BsClipboard2Check className="h-10 w-10"/>
+              <BsClipboard2Check className="sm:h-10 sm:w-10"/>
             </div>
-            <div className="sm:col-span-3 flex px-2 items-center">
+            <div className="col-span-3 flex px-2 items-center">
               <p className="sm:text-xl">Easy forms to track daily expenses</p>
             </div>
           </div>
 
           <div className="card-primary">
             <div className="flex items-center justify-center border-r-2 border-slate-300">
-              <FaUserFriends className="h-10 w-10"/>
+              <FaUserFriends className="sm:h-10 sm:w-10"/>
             </div>
-            <div className="sm:col-span-3 px-2 items-center">
+            <div className="col-span-3 px-2 items-center">
               <p className="sm:text-xl">Split bills among friends and track payments</p>
             </div>
           </div>
 
           <div className="card-primary">
             <div className="flex items-center justify-center border-r-2 border-slate-300">
-              <VscGraphLine className="h-10 w-10"/>
+              <VscGraphLine className="sm:h-10 sm:w-10"/>
             </div>
-            <div className="sm:col-span-3 px-2 items-center">
-              <p className="sm:text-xl">Simple data analysis for monthly expenditures</p>
+            <div className="col-span-3 px-2 items-center">
+              <p className="sm:text-xl text-sm">Simple data analysis for monthly expenditures</p>
             </div> 
           </div>
 
