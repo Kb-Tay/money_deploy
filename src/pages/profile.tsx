@@ -3,6 +3,7 @@ import Target from "~/components/Target"
 import { useSession } from "next-auth/react"
 import { SpendingData } from "~/components/SpendingData"
 import Expense from "~/components/Expense"
+import Loading from "~/components/Loading"
 
 export type Spending = { 
   id: string, 
@@ -48,7 +49,11 @@ export default function Page() {
   if (session.status !== 'authenticated') return (<div>Not authenticated</div>); 
 
   if (isLoading) {
-    return <span>Loading...</span>
+    return (
+    <div className="flex justify-center items-center">
+      <Loading/>
+    </div>
+    )
   }
 
   if (isError) {

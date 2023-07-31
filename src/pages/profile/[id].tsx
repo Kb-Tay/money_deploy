@@ -13,6 +13,7 @@ import { ssgHelper } from "~/server/api/ssgHelper";
 import Link from "next/link";
 import PayeeForm from "~/components/PayeeForm";
 import { useToast } from "@chakra-ui/react";
+import Loading from "~/components/Loading";
 
 
 const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>> = ({ id }) => { 
@@ -21,13 +22,19 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
   const utils = api.useContext()
 
   const updateSpending = api.spending.edit.useMutation({
-    onSuccess: async () => { await utils.spending.invalidate() }
+    onSuccess: async () => { 
+      await utils.spending.invalidate() 
+    }
   })
 
   const spendingTotal = data?.money ?? 0 
 
   if (isLoading) {
-    return <div> Loading... </div>
+    return (
+      <div className="flex justify-center items-center">
+        <Loading/>
+      </div>
+    )
   }
 
   const initialValue = {
@@ -80,7 +87,7 @@ const SpendingPage: NextPage<InferGetServerSidePropsType<typeof getStaticProps>>
 
         toast({
           title: 'Success',
-          description: 'New spending created',
+          description: 'Spending edited',
           status: 'success',
           duration: 9000,
           isClosable: true,

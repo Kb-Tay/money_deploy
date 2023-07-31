@@ -9,8 +9,9 @@ type FriendProps = {
 export default function FriendList({followers, following}: FriendProps) {
 
   return (
-        <div className="profile">
+        <div className="flex flex-col space-y-2">
           
+          <div className="profile">
             {
               followers?.filter(post => post.isFriend).map((post, index) =>
                 <div key={index} className="flex flex-rows items-center space-x-2">
@@ -19,7 +20,9 @@ export default function FriendList({followers, following}: FriendProps) {
                 </div>
               )
             }
-          
+          </div>   
+
+          <div className="profile">
           {
             following?.filter(post => post.isFriend).map((post, index) => 
               <div key={index} className="flex flex-rows items-center space-x-2 ">
@@ -28,6 +31,8 @@ export default function FriendList({followers, following}: FriendProps) {
             </div>
             )
           }
+          </div>
+          
         </div>
   )
 }

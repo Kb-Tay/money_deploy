@@ -4,6 +4,7 @@ import type { TargetProps } from "~/pages/profile";
 import { api } from "~/utils/api";
 import Payee from "./Payee";
 import TargetForm from "./TargetForm";
+import Loading from "./Loading";
 
 export type TargetForm = {
   id: string,
@@ -30,8 +31,6 @@ export default function Target({src, name, userId, expenses}: TargetProps) {
   })
   const target = api.target.getTarget.useQuery()
 
-  console.log(target.data)
-
   const handleTarget = () => {
     if (target.data?.length == 0 ) {
       createTarget.mutate()
@@ -56,6 +55,14 @@ export default function Target({src, name, userId, expenses}: TargetProps) {
 
   const handleValidate = (id: string) => {
     validatePayment.mutate(id)
+  }
+
+  if (target.isLoading) {
+    return (
+      <div className="flex justify-center items-center">
+        <Loading/>
+      </div>
+    )
   }
 
   return ( 
