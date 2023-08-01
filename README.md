@@ -11,6 +11,17 @@ Moneymanager is a fullstack web application that was built using the create T3 a
 * TRPC
 * Tailwind css
 * Chakra UI
+* Zodd
+* Formik 
+
+# Reasons for Technology and Frameworks used
+I decided to use T3 app to learn typescript and the frameworks make use TypeScript strong typing to ensure type safety within the entire application. 
+
+**TRPC** 
+This library enables me to create type-safe APIS using Typescript.
+
+# Design Pattern
+
 
 # Features 
 * Home Page
