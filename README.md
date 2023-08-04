@@ -15,13 +15,13 @@ Moneymanager is a fullstack web application that was built using the create T3 a
 * Formik 
 
 # Reasons for Technology and Frameworks used
-I decided to use T3 app to learn typescript and the frameworks make use TypeScript strong typing to ensure type safety within the entire application. 
+I decided to use T3 app to learn typescript and the frameworks make use TypeScript strong typing to ensure type safety within the entire application, frontend and backend. 
 
 **TRPC** 
-This library enables me to create type-safe APIS using Typescript.
+This library enables me to create type-safe APIS using Typescript. Using the zod validation library, the backend is able to validate inputs before adding to the database. TRPC also integrates React Query, which helps handle backend issues, allowing the application to cache query data and only refetching data when there is a CRUD request being made, in which the data fetched is invalidated. This allows the application to be more efficient and prevents unneccessary api calls to refetch data from the database whenever the page is rendered. 
 
-# Design Pattern
-
+**Next.js** 
+Unlike react.js that only uses client-side rendering, next.js allows pages to be pre-rendered at build time. This allows for this web application to display static html content to users on the initial render instead of a blank html page when using react.js. Additionally, since expenses recorded before are unlikely to be updated frequently by the user, the application uses static site generation for the spending list component and individual spending pages. This allows for data fetched from the database to be cached in CDN, giving a faster user experience. 
 
 # Features 
 * Home Page
